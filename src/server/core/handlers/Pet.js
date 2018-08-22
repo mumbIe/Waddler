@@ -355,7 +355,10 @@ class Pet {
 				}
 			}
 
-			penguin.database.adoptPuffle(penguin.id, puffleName, puffleType).then(() => {
+			const stats = this.getStats(puffleType)
+			if (stats.constructor.name != "Array") return penguin.sendError(stats, true)
+
+			penguin.database.adoptPuffle(penguin.id, puffleName, puffleType, stats).then(() => {
 				penguin.removeCoins(800)
 				penguin.database.getPuffleByName(penguin.id, puffleName).then((result) => {
 					if (result.length <= 0) return

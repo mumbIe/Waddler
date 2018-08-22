@@ -27,6 +27,10 @@ class Bot {
 	static sendMessage(message, penguin) {
 		penguin.sendXt("sm", -1, 0, message)
 	}
+
+	static sendGlobalMessage(message, penguin) {
+		for (const player of penguin.server.penguins) player.sendXt("sm", -1, 0, message)
+	}
 }
 
 module.exports = Bot

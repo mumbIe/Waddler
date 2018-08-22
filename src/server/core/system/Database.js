@@ -117,17 +117,6 @@ class Database {
 		})
 	}
 
-	banByUsername(username) {
-		return this.knex("penguins").update("banned", 1).where({
-			username
-		})
-	}
-	unbanByUsername(username) {
-		return this.knex("penguins").update("banned", 0).where({
-			username
-		})
-	}
-
 	getBuddies(ID) {
 		return this.knex("buddies").select("buddyID", "buddyUsername").where({
 			ID
@@ -177,14 +166,14 @@ class Database {
 			ID
 		})
 	}
-	adoptPuffle(ID, puffleName, puffleType) {
+	adoptPuffle(ID, puffleName, puffleType, stats) {
 		return this.knex("puffles").insert({
 			ID: ID,
 			puffleName: puffleName,
 			puffleType: puffleType,
-			puffleFood: 100,
-			pufflePlay: 100,
-			puffleRest: 100,
+			puffleFood: stats[0],
+			pufflePlay: stats[1],
+			puffleRest: stats[2],
 			puffleWalk: 0
 		})
 	}

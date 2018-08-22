@@ -100,52 +100,6 @@ class Penguin extends Socket {
 		this.database.insertItem(this.id, item)
 		this.sendXt("ai", -1, item, this.coins)
 	}
-	getInventory() {
-		let inventory = []
-
-		this.getColumn("itemID", "inventory").then((result) => {
-			if (result.length <= 0) return this.sendXt("gi", -1, "")
-
-			result.forEach(row => {
-				inventory.push(row.itemID)
-			})
-
-			this.inventory = inventory
-		}).catch((err) => {
-			Logger.error(err)
-		})
-	}
-	updateClothing(type, item) {
-		this[type] = item
-		this.updateColumn(type, item)
-	}
-
-	getFurniture() {
-		this.database.getFurnitureAndQuantity(this.id).then((result) => {
-			if (result.length <= 0) return this.sendXt("gf", -1, "")
-
-			result.forEach(row => {
-				this.sendXt("gf", -1, [row.furnitureID, row.quantity].join("|") + "|")
-			})
-		}).catch((err) => {
-			Logger.error(err)
-		})
-	}
-	getIgloos() {
-		let igloos = []
-
-		this.getColumn("igloos").then((result) => {
-			let iglooStr = result[0].igloos
-
-			if (iglooStr.length <= 0) return this.sendXt("go", -1, "")
-
-			igloos.push(iglooStr.split("|").join("|"))
-
-			this.igloos = igloos
-		}).catch((err) => {
-			Logger.error(err)
-		})
-	}
 	addFurniture(furnitureID) {
 		const furniture = require("../crumbs/furniture")
 
@@ -203,20 +157,14 @@ class Penguin extends Socket {
 		this.updateColumn("floor", floor, "igloo")
 		this.sendXt("ag", -1, floor, this.coins)
 	}
-
 	addCoins(coins) {
+		if (isNaN(coins)) return
+
 		this.coins += coins
-
-		if (coins > 9999 && !this.moderator) return this.disconnect()
-
 		this.updateColumn("coins", this.coins)
 	}
-	removeCoins(coins) {
-		this.coins -= coins
-		this.updateColumn("coins", this.coins)
-	}
-
 	addStamp(stampID) {
+		if (isNaN(stampID)) return
 		if (Number(stampID) == 14 && this.age != 183) return
 		if (Number(stampID) == 20 && this.age != 365) return
 
@@ -235,11 +183,63 @@ class Penguin extends Socket {
 			this.sendXt("aabs", -1, stampID)
 		})
 	}
+	getInventory() {
+		let inventory = []
+
+		this.getColumn("itemID", "inventory").then((result) => {
+			if (result.length <= 0) return this.sendXt("gi", -1, "")
+
+			result.forEach(row => {
+				inventory.push(row.itemID)
+			})
+
+			this.inventory = inventory
+		}).catch((err) => {
+			Logger.error(err)
+		})
+	}
+	getFurniture() {
+		this.database.getFurnitureAndQuantity(this.id).then((result) => {
+			if (result.length <= 0) return this.sendXt("gf", -1, "")
+
+			result.forEach(row => {
+				this.sendXt("gf", -1, [row.furnitureID, row.quantity].join("|") + "|")
+			})
+		}).catch((err) => {
+			Logger.error(err)
+		})
+	}
+	getIgloos() {
+		let igloos = []
+
+		this.getColumn("igloos").then((result) => {
+			let iglooStr = result[0].igloos
+
+			if (iglooStr.length <= 0) return this.sendXt("go", -1, "")
+
+			igloos.push(iglooStr.split("|").join("|"))
+
+			this.igloos = igloos
+		}).catch((err) => {
+			Logger.error(err)
+		})
+	}
+
+	removeCoins(coins) {
+		if (isNaN(coins)) return
+
+		this.coins -= coins
+		this.updateColumn("coins", this.coins)
+	}
 
 	updateColumn(column, value, table = null) {
 		this.database.updateColumn(this.id, column, value, table).catch((err) => {
 			Logger.error(err)
 		})
+	}
+	updateClothing(type, item) {
+		this[type] = item
+		this.updateColumn(type, item)
 	}
 	getColumn(column, table = null) {
 		return this.database.getColumn(this.id, column, table)

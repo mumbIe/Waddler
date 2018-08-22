@@ -18,6 +18,9 @@ class sp {
 	static isMancalaTable(tableId) {
 		return [100, 101, 102, 103, 104].includes(tableId)
 	}
+	static isTreasureHuntTable(tableId) {
+		return [300, 301, 302, 303, 304, 305, 306, 307].includes(tableId)
+	}
 
 	static getRandomCoins() {
 		return [1, 2, 5, 10, 20, 50, 100][Math.floor(Math.random() * 7)]
