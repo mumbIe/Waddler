@@ -52,6 +52,7 @@ class Commands {
 		const method = commandCategory[command]
 
 		if (commandCategory == MULTIPLE_ARGUMENTS) argument = argument.join(" ")
+		if (commandCategory == ONE_ARGUMENT) argument = argument[0]
 
 		if (!this[method] || typeof this[method] != "function") return Bot.sendMessage(`${command} is not a valid command`, penguin)
 

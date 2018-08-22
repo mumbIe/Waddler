@@ -1,7 +1,7 @@
 "use strict"
 
 const Logger = require("../../Logger")
-const Room = require("./Room")
+const Room = require("../system/Room")
 
 class roomManager {
 	constructor(server) {

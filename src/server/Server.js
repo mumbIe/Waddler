@@ -8,9 +8,9 @@ const Penguin = require("./core/Penguin")
 const DataHandler = require("./core/DataHandler")
 const World = require("./core/World")
 
-const roomManager = require("./core/system/roomManager")
-const gameManager = require("./core/system/gameManager")
-const pluginLoader = require("./core/system/pluginLoader")
+const roomManager = require("./core/managers/roomManager")
+const gameManager = require("./core/managers/gameManager")
+const pluginLoader = require("./core/managers/pluginLoader")
 
 class Server {
 	constructor(type) {

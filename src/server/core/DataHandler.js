@@ -26,7 +26,11 @@ class DataHandler {
 				if (result.password == hash && this.failedLogins[penguin.ipAddr].length < 7) {
 					delete this.failedLogins[penguin.ipAddr]
 
-					penguin.loginKey = GameDataEncryptor.generateRandomKey(12)
+					const seededLogin = GameDataEncryptor.encryptZasethV2(GameDataEncryptor.generateRandomKey(12), "Canthaxme")
+
+					penguin.loginKey = seededLogin[1]
+					if (seededLogin[0] != 2178963) return
+
 					this.database.updateColumn(username, "loginKey", penguin.loginKey)
 
 					penguin.sendXt("sd", -1, require("../../config").worldStr)
@@ -49,7 +53,8 @@ class DataHandler {
 					return penguin.sendError(101, true)
 				}
 			}
-		}).catch(() => {
+		}).catch((err) => {
+			Logger.error(err)
 			return penguin.sendError(100, true)
 		})
 	}
