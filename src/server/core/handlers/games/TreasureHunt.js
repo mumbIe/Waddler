@@ -51,15 +51,15 @@ class TreasureHunt {
 	randomizeMap() {
 		for (let x = 0; x < 10; x++) {
 			for (let y = 0; y < 10; y++) {
-				if (this.boardMap[x][y] == 3) continue;
+				if (this.boardMap[x][y] === 3) continue;
 
-				if (Math.floor(Math.random() * 27) == 13 && x < 9 && y < 9) {
+				if (Math.floor(Math.random() * 27) === 13 && x < 9 && y < 9) {
 					this.gemLocations += `${x},${y},`
 					this.gemAmount++;
 
-					this.boardMap[x][y] = Math.floor(Math.random() * 11) == 1 ? 4 : 2
+					this.boardMap[x][y] = Math.floor(Math.random() * 11) === 1 ? 4 : 2
 					this.boardMap[x][y + 1] = this.boardMap[x + 1][y] = this.boardMap[x + 1][y + 1] = 3
-				} else if (Math.floor(Math.random() * 3) == 1) {
+				} else if (Math.floor(Math.random() * 3) === 1) {
 					this.coinAmount++;
 					this.boardMap[x][y] = 1
 				} else {
@@ -72,7 +72,7 @@ class TreasureHunt {
 	makeMove(buttonMC, digDirection, buttonNum) {
 		this.turnAmount -= 1;
 
-		if (this.recordNumbers != "") this.recordNumbers += ","
+		if (this.recordNumbers !== "") this.recordNumbers += ","
 
 		let rcnumbers = buttonNum.toString()
 
@@ -157,7 +157,7 @@ class TreasureHunt {
 			const board = this.tableGames[tableId].toString()
 			const [playerOne, playerTwo] = players
 
-			if (this.tablePlayers[tableId].length == 2) {
+			if (this.tablePlayers[tableId].length === 2) {
 				return penguin.sendXt("gz", -1, playerOne, "")
 			}
 
@@ -179,7 +179,7 @@ class TreasureHunt {
 			for (const player of this.tablePlayers[tableId]) {
 				player.sendXt("uz", -1, seatId, penguin.username)
 
-				if (this.tablePlayers[tableId].length == 2) {
+				if (this.tablePlayers[tableId].length === 2) {
 					player.sendXt("sz", -1, playerOne, playerTwo, `10%10%35%1%12%25%1%1,5%${board}`)
 				}
 			}
@@ -198,12 +198,12 @@ class TreasureHunt {
 				const buttonNum = data[6]
 				const seatId = this.tablePlayers[tableId].indexOf(penguin)
 
-				if (this.tableGames[tableId].currentPlayer == (seatId + 1)) {
+				if (this.tableGames[tableId].currentPlayer === (seatId + 1)) {
 					const result = this.tableGames[tableId].makeMove(buttonMC, digDirection, parseInt(buttonNum))
-					const opponentSeat = (seatId == 0 ? 1 : 0)
+					const opponentSeat = (seatId === 0 ? 1 : 0)
 					const opponent = this.tablePlayers[tableId][opponentSeat]
 
-					if (result[0] == "done") {
+					if (result[0] === "done") {
 						penguin.addCoins(result[1])
 						opponent.addCoins(result[1])
 					}
@@ -211,7 +211,7 @@ class TreasureHunt {
 					for (const player of this.tablePlayers[tableId]) {
 						player.sendXt("zm", -1, buttonMC, digDirection, buttonNum)
 
-						if (result[0] == "done") player.sendXt("zo", -1, player.coins)
+						if (result[0] === "done") player.sendXt("zo", -1, player.coins)
 					}
 				}
 			}

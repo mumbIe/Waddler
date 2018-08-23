@@ -1,8 +1,5 @@
 "use strict"
 
-const Logger = require("../Logger")
-const sp = require("./utils/sp")
-
 const Clothing = require("./handlers/Clothing")
 const Navigation = require("./handlers/Navigation")
 const Player = require("./handlers/Player")
@@ -460,60 +457,4 @@ const xtHandlers = {
 	}
 }
 
-class World {
-	constructor(server) {
-		this.server = server
-		this.database = server.database
-	}
-
-	handleGameData(data, penguin) {
-		const packet = data
-
-		data = data.split("%")
-		data.shift()
-
-		if (data[0] != "xt") return penguin.disconnect()
-
-		const type = data[1],
-			handler = data[2]
-
-		const method = xtHandlers[type][handler]
-
-		if (!method) return Logger.unknown(packet)
-
-		const func = method["func"],
-			file = method["file"],
-			throttle = method["throttle"]
-
-		if (typeof file[func] == "function") {
-			Logger.incoming(packet)
-
-			let now = new Date()
-			let timestamp = (now.getTime() / 1000)
-
-			if (throttle) {
-				if (penguin.throttle[handler] == undefined || !penguin.throttle[handler]) {
-					penguin.throttle[handler] = [0, timestamp]
-				} else {
-					penguin.throttle[handler][0]++;
-					now.setMinutes(now.getMinutes() - 1)
-					if (Math.round(now.getTime() / 1000) < Math.round(penguin.throttle[handler][1])) {
-						if (penguin.throttle[handler][0] >= 150) {
-							return penguin.sendError(800, true)
-						}
-					} else {
-						delete penguin.throttle[handler]
-					}
-					if (penguin.throttle[handler] !== undefined) penguin.throttle[handler][1] = timestamp
-				}
-			}
-
-			file[func](data, penguin)
-		} else {
-			Logger.error(`Unexisting packet "${packet}" passed through error checking`)
-		}
-	}
-}
-
-
-module.exports = World
+module.exports = xtHandlers

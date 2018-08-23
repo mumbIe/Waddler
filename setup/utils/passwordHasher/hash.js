@@ -7,8 +7,8 @@ const hashPassword = (pass, algorithm) => {
 const algorithm = process.argv[2]
 const pass = process.argv[3]
 
-if (algorithm.length == 0) throw new Error("Must specify an algorithm")
-if (pass.length == 0) throw new Error("Must specify a password")
+if (algorithm.length === 0) throw new Error("Must specify an algorithm")
+if (pass.length === 0) throw new Error("Must specify a password")
 
 switch (algorithm) {
 	case "keccak224":

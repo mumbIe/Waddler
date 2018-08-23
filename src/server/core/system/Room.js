@@ -26,10 +26,10 @@ class Room {
 		if (this.id > 1000) {
 			let addStamp = true
 
-			if (penguin.stamps.length != 0) {
+			if (penguin.stamps.length !== 0) {
 				penguin.stamps.forEach(stamp => {
 					stamp = stamp.split("|")
-					if (Number(stamp[0]) == 17 || Number(stamp[0]) == 28) addStamp = false
+					if (Number(stamp[0]) === 17 || Number(stamp[0]) === 28) addStamp = false
 				})
 			}
 

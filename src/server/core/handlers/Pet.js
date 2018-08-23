@@ -32,9 +32,9 @@ class Pet {
 			let puffleDetails = [puffleID, puffle["puffleName"], puffle["puffleType"], puffle["puffleFood"], puffle["pufflePlay"], puffle["puffleRest"]]
 
 			if (iglooAppend) {
-				if (puffles[puffleID] == undefined) {
+				if (puffles[puffleID] === undefined) {
 					const stats = this.getStats(puffle["puffleType"])
-					if (stats.constructor.name != "Array") return penguin.sendError(stats, true)
+					if (stats.constructor.name !== "Array") return penguin.sendError(stats, true)
 
 					puffles[puffleID] = [stats[0], stats[1], stats[2], 0, 0, 0, 0]
 				}
@@ -276,10 +276,10 @@ class Pet {
 
 			let puffle = this.joinPuffleData(result, true)
 
-			if (puffles[puffleID] == undefined) return
+			if (puffles[puffleID] === undefined) return
 
 			const stats = this.getStats(result[0].puffleType)
-			if (stats.constructor.name != "Array") return penguin.sendError(stats, true)
+			if (stats.constructor.name !== "Array") return penguin.sendError(stats, true)
 
 			puffles[puffleID] = [stats[0], stats[1], stats[2], puffleX, puffleY, 0, 0]
 
@@ -315,9 +315,9 @@ class Pet {
 			let handItem = `75${puffleType}`
 			let walking
 
-			if (puffles[puffleID] == undefined) return
+			if (puffles[puffleID] === undefined) return
 
-			if (Number(result[0].puffleWalk) == 0) {
+			if (Number(result[0].puffleWalk) === 0) {
 				walking = 1
 				penguin.walkingPuffle = puffleID
 			} else {
@@ -325,7 +325,7 @@ class Pet {
 			}
 
 			const stats = this.getStats(puffleType)
-			if (stats.constructor.name != "Array") return penguin.sendError(stats, true)
+			if (stats.constructor.name !== "Array") return penguin.sendError(stats, true)
 
 			puffles[puffleID] = [stats[0], stats[1], stats[2], 0, 0, 0, walking]
 
@@ -356,7 +356,7 @@ class Pet {
 			}
 
 			const stats = this.getStats(puffleType)
-			if (stats.constructor.name != "Array") return penguin.sendError(stats, true)
+			if (stats.constructor.name !== "Array") return penguin.sendError(stats, true)
 
 			penguin.database.adoptPuffle(penguin.id, puffleName, puffleType, stats).then(() => {
 				penguin.removeCoins(800)

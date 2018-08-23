@@ -33,8 +33,8 @@ class Stamps {
 
 			penguin.database.getInventoryByID(penguinID).then((result) => {
 				result.forEach(row => {
-					if (items[row.itemID].type == "pin") {
-						if (pins[row.itemID] != undefined) {
+					if (items[row.itemID].type === "pin") {
+						if (pins[row.itemID] !== undefined) {
 							pinStr += `${row.itemID}|${pins[row.itemID].unix}|1%`
 						} else {
 							pinStr += `${row.itemID}|${sp.getTime()}|1%`
@@ -42,7 +42,7 @@ class Stamps {
 					}
 				})
 
-				if (pinStr.length == 0) return penguin.sendXt("qpp", -1, "")
+				if (pinStr.length === 0) return penguin.sendXt("qpp", -1, "")
 
 				penguin.sendXt("qpp", -1, `|${pinStr.slice(0, -1)}`)
 			})
@@ -68,7 +68,7 @@ class Stamps {
 					}
 				})
 
-				if (awardStr.length == 0) return penguin.sendXt("qpa", -1, "")
+				if (awardStr.length === 0) return penguin.sendXt("qpa", -1, "")
 
 				penguin.sendXt("qpa", -1, `|${awardStr.slice(0, -1)}`)
 			})
@@ -100,7 +100,7 @@ class Stamps {
 		})
 
 		penguin.getColumn("cover").then((result) => {
-			if (cover != result[0].cover) {
+			if (cover !== result[0].cover) {
 				penguin.updateColumn("cover", cover)
 			}
 		})

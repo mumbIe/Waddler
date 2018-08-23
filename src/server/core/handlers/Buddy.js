@@ -10,7 +10,7 @@ class Buddy {
 			result.forEach(row => {
 				const isBuddyOnline = penguin.server.isPenguinOnline(row.buddyID) ? "1" : "0"
 
-				if (Number(isBuddyOnline) == 1) {
+				if (Number(isBuddyOnline) === 1) {
 					const onlineBuddy = penguin.server.getPenguinById(row.buddyID)
 					onlineBuddy.sendXt("bon", -1, penguin.id)
 				}
@@ -33,10 +33,10 @@ class Buddy {
 
 			if (penguin.buddies.length >= 500) return penguin.sendError(901)
 
-			if (penguin.buddies.length != 0) {
+			if (penguin.buddies.length !== 0) {
 				penguin.buddies.forEach(buddy => {
 					buddy = buddy.split("|")
-					if (Number(buddy[0]) == toAccept) return
+					if (Number(buddy[0]) === toAccept) return
 				})
 			}
 
@@ -68,13 +68,13 @@ class Buddy {
 		penguin.doesIDExist(toRequest).then((exists) => {
 			if (!exists) return
 
-			if (toRequest == penguin.id) return
+			if (toRequest === penguin.id) return
 			if (penguin.buddies.length >= 500) return penguin.sendError(901)
 
-			if (penguin.buddies.length != 0) {
+			if (penguin.buddies.length !== 0) {
 				penguin.buddies.forEach(buddy => {
 					buddy = buddy.split("|")
-					if (Number(buddy[0]) == toRequest) return
+					if (Number(buddy[0]) === toRequest) return
 				})
 			}
 
@@ -82,10 +82,10 @@ class Buddy {
 
 			if (requestObj) {
 				if (requestObj.buddies.length >= 500) return requestObj.sendError(901)
-				if (requestObj.buddies.length != 0) {
+				if (requestObj.buddies.length !== 0) {
 					requestObj.buddies.forEach(buddy => {
 						buddy = buddy.split("|")
-						if (Number(buddy[0]) == penguin.id) return
+						if (Number(buddy[0]) === penguin.id) return
 					})
 				}
 
@@ -103,7 +103,7 @@ class Buddy {
 		penguin.doesIDExist(toRemove).then((exists) => {
 			if (!exists) return
 
-			if (penguin.buddies.length == 0) return
+			if (penguin.buddies.length === 0) return
 
 			penguin.database.getUsernameByID(toRemove).then((result) => {
 				const usernameToRemove = result[0].username

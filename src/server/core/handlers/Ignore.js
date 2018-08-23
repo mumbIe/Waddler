@@ -24,16 +24,16 @@ class Ignore {
 		penguin.doesIDExist(toIgnore).then((exists) => {
 			if (!exists) return
 
-			if (penguin.buddies.length != 0) {
+			if (penguin.buddies.length !== 0) {
 				penguin.buddies.forEach(buddy => {
 					buddy = buddy.split("|")
-					if (Number(buddy[0]) == toIgnore) return
+					if (Number(buddy[0]) === toIgnore) return
 				})
 			}
-			if (penguin.ignored.length != 0) {
+			if (penguin.ignored.length !== 0) {
 				penguin.ignored.forEach(ignore => {
 					ignore = ignore.split("|")
-					if (Number(ignore[0]) == toIgnore) return
+					if (Number(ignore[0]) === toIgnore) return
 				})
 			}
 
@@ -60,7 +60,7 @@ class Ignore {
 
 			penguin.ignored.forEach(ignore => {
 				ignore = ignore.split("|")
-				if (Number(ignore[0]) != toRemove) return
+				if (Number(ignore[0]) !== toRemove) return
 			})
 
 			penguin.database.getUsernameByID(toRemove).then((result) => {

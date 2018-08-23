@@ -13,7 +13,7 @@ class Player {
 		penguin.y = y
 
 		if (penguin.coinDig > 5) return penguin.sendError(800, true)
-		if (penguin.coinDig != 0) penguin.coinDig = 0
+		if (penguin.coinDig !== 0) penguin.coinDig = 0
 
 		penguin.room.sendXt("sp", -1, penguin.id, x, y)
 	}
@@ -136,13 +136,13 @@ class Player {
 	static handleSendMessage(data, penguin) {
 		let message = String(data[5])
 
-		if (message.length <= 0 || message.length > 48 && parseInt(data[4]) != 0 && !penguin.moderator) return penguin.sendError(5, true)
+		if (message.length <= 0 || message.length > 48 && parseInt(data[4]) !== 0 && !penguin.moderator) return penguin.sendError(5, true)
 		if (penguin.muted) return
 
 		let commandsEnabled = penguin.server.pluginLoader.getPlugin("Commands") ? true : false
 		let censorEnabled = penguin.server.pluginLoader.getPlugin("Censor") ? true : false
 
-		if (commandsEnabled && message.charAt(0) == "/") {
+		if (commandsEnabled && message.charAt(0) === "/") {
 			const command = message.substr(1)
 
 			message = message.split(" ")
@@ -160,7 +160,7 @@ class Player {
 	}
 
 	static handleMineCoins(data, penguin) {
-		if (penguin.frame != 26) return penguin.sendError(5, true)
+		if (penguin.frame !== 26) return penguin.sendError(5, true)
 		if (penguin.coinDig > 5) return
 
 		const amount = sp.getRandomCoins()

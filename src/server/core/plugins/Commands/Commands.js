@@ -48,13 +48,13 @@ class Commands {
 		if (splittedCommand[2] && ONE_ARGUMENT[splittedCommand[0]]) return Bot.sendMessage(`${command} needs one argument`, penguin)
 		if (!splittedCommand[1] && MULTIPLE_ARGUMENTS[splittedCommand[0]]) return Bot.sendMessage(`${command} needs at least one argument`, penguin)
 
-		const commandCategory = argument.length == 0 && NO_ARGUMENT[command] ? NO_ARGUMENT : argument.length == 1 && ONE_ARGUMENT[command] ? ONE_ARGUMENT : argument.length == 2 && TWO_ARGUMENTS[command] ? TWO_ARGUMENTS : MULTIPLE_ARGUMENTS
+		const commandCategory = argument.length === 0 && NO_ARGUMENT[command] ? NO_ARGUMENT : argument.length === 1 && ONE_ARGUMENT[command] ? ONE_ARGUMENT : argument.length === 2 && TWO_ARGUMENTS[command] ? TWO_ARGUMENTS : MULTIPLE_ARGUMENTS
 		const method = commandCategory[command]
 
-		if (commandCategory == MULTIPLE_ARGUMENTS) argument = argument.join(" ")
-		if (commandCategory == ONE_ARGUMENT) argument = argument[0]
+		if (commandCategory === MULTIPLE_ARGUMENTS) argument = argument.join(" ")
+		if (commandCategory === ONE_ARGUMENT) argument = argument[0]
 
-		if (!this[method] || typeof this[method] != "function") return Bot.sendMessage(`${command} is not a valid command`, penguin)
+		if (!this[method] || typeof this[method] !== "function") return Bot.sendMessage(`${command} is not a valid command`, penguin)
 
 		this[method](argument, penguin, Bot)
 	}
@@ -68,7 +68,7 @@ class Commands {
 	static handleGetOnline(argument, penguin, Bot) {
 		let online = penguin.server.penguins.length
 
-		return Bot.sendMessage(online == 1 ? "You're the only one online" : `There are ${online} players online`, penguin)
+		return Bot.sendMessage(online === 1 ? "You're the only one online" : `There are ${online} players online`, penguin)
 	}
 	static handleGetID(argument, penguin, Bot) {
 		return Bot.sendMessage(`Your ID is: ${penguin.id}`, penguin)
@@ -184,7 +184,7 @@ class Commands {
 		const playerObj = penguin.server.getPenguinByUsername(argument)
 
 		if (playerObj) {
-			if (playerObj.room.id == penguin.room.id) return Bot.sendMessage(`You're in the same room as ${argument}`, penguin)
+			if (playerObj.room.id === penguin.room.id) return Bot.sendMessage(`You're in the same room as ${argument}`, penguin)
 			this.handleJoinRoom(playerObj.room.id, penguin, Bot)
 			Bot.sendMessage(`${penguin.username} teleported to you`, playerObj)
 		}

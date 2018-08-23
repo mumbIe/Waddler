@@ -36,7 +36,7 @@ class convertCrumbs {
 				const member = result[i]["is_member"]
 
 				const id = result[i]["type"]
-				const type = id == 1 ? "color" : id == 2 ? "head" : id == 3 ? "face" : id == 4 ? "neck" : id == 5 ? "body" : id == 6 ? "hand" : id == 7 ? "feet" : id == 8 ? "pin" : id == 9 ? "photo" : id == 10 ? "other" : console.error(`Unknown item type: ${id}`)
+				const type = id === 1 ? "color" : id === 2 ? "head" : id === 3 ? "face" : id === 4 ? "neck" : id === 5 ? "body" : id === 6 ? "hand" : id === 7 ? "feet" : id === 8 ? "pin" : id === 9 ? "photo" : id === 10 ? "other" : console.error(`Unknown item type: ${id}`)
 
 				obj[itemid] = {
 					name: name,
@@ -204,8 +204,8 @@ class convertCrumbs {
 			console.log("Downloaded stamps from icer.ink")
 
 			JSON.parse(result, (key, value) => {
-				if (key == "stamp_id") stampid = value
-				if (stampid != 0 && key == "name") {
+				if (key === "stamp_id") stampid = value
+				if (stampid !== 0 && key === "name") {
 					obj[stampid] = {
 						"name": value
 					}

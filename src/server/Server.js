@@ -1,12 +1,12 @@
 "use strict"
 
 const Logger = require("./Logger")
+const config = require("../config")
 
 const Database = require("./core/system/Database")
 const Penguin = require("./core/Penguin")
 
 const DataHandler = require("./core/DataHandler")
-const World = require("./core/World")
 
 const roomManager = require("./core/managers/roomManager")
 const gameManager = require("./core/managers/gameManager")
@@ -15,16 +15,15 @@ const pluginLoader = require("./core/managers/pluginLoader")
 class Server {
 	constructor(type) {
 		this.type = type
-		this.port = type == "login" ? 6112 : 6113
-		this.maxPenguins = 150
+		this.port = type === "login" ? config.loginPort : config.worldPort
+		this.maxPenguins = config.maxPenguins || 150
 
 		this.penguins = []
 
 		this.database = new Database()
-		this.gameHandler = new World(this)
 		this.dataHandler = new DataHandler(this)
 
-		if (this.type == "game") {
+		if (type !== "login") {
 			this.roomManager = new roomManager(this)
 			this.gameManager = new gameManager(this)
 			this.pluginLoader = new pluginLoader()
@@ -60,27 +59,28 @@ class Server {
 				return penguin.disconnect()
 			})
 			socket.on("error", (error) => {
-				if (error.code == "ETIMEDOUT" || error.code == "ECONNRESET") return
+				if (error.code === "ETIMEDOUT" || error.code === "ECONNRESET") return
 				Logger.error(error)
 				return penguin.disconnect()
 			})
 		}).listen(this.port, () => {
 			Logger.info(`Waddler {${this.type}} listening on port ${this.port}`)
-			if (this.type == "login") {
-				if (this.calculateValidMaxPenguins(this.maxPenguins)) {
-					Logger.info(`Max amount of penguins: ${this.maxPenguins}`)
-				} else {
-					throw new Error(`${this.maxPenguins} cannot be divided over 6 server bars`)
-					process.exit(1)
-				}
+
+			if (this.type !== "login") return
+
+			if (!this.calculateValidMaxPenguins(this.maxPenguins)) {
+				throw new Error(`Cannot divide ${this.maxPenguins} max penguins over 6 server bars`)
+				process.exit(1)
 			}
+
+			Logger.info(`Max amount of penguins: ${this.maxPenguins}`)
 		})
 	}
 
 	calculateValidMaxPenguins() {
 		const playersPerBar = this.maxPenguins / 6
 
-		if (playersPerBar.toString().indexOf(".") == -1) return true
+		if (playersPerBar.toString().indexOf(".") === -1) return true
 
 		return false
 	}
@@ -105,7 +105,7 @@ class Server {
 
 	getPenguinById(id) {
 		for (const penguin of this.penguins) {
-			if (penguin.id == id) {
+			if (penguin.id === id) {
 				return penguin
 			}
 		}
@@ -113,7 +113,7 @@ class Server {
 
 	getPenguinByUsername(username) {
 		for (const penguin of this.penguins) {
-			if (penguin.username.toLowerCase() == username.toLowerCase()) {
+			if (penguin.username.toLowerCase() === username.toLowerCase()) {
 				return penguin
 			}
 		}
@@ -121,7 +121,7 @@ class Server {
 
 	isPenguinOnline(id) {
 		for (const penguin of this.penguins) {
-			if (penguin.id == id) {
+			if (penguin.id === id) {
 				return true
 			}
 		}
@@ -153,8 +153,8 @@ class Server {
 			if (penguin.room) penguin.room.removePenguin(penguin)
 			if (penguin.tableId) this.gameManager.leaveTable(penguin)
 
-			if (this.type == "game" && penguin.id != undefined) {
-				if (penguin.buddies.length != 0) {
+			if (this.type === "game" && penguin.id !== undefined) {
+				if (penguin.buddies.length !== 0) {
 					penguin.buddies.forEach(buddy => {
 						buddy = buddy.split("|")
 						const buddyID = Number(buddy[0])

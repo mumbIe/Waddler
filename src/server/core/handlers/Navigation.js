@@ -63,7 +63,7 @@ class Navigation {
 
 		if (penguin.room) penguin.room.removePenguin(penguin)
 		if (room < 1000) room += 1000
-		if (penguin.server.roomManager.getRoom(room) == false) penguin.server.roomManager.createRoom(room)
+		if (penguin.server.roomManager.getRoom(room) === false) penguin.server.roomManager.createRoom(room)
 
 		const roomObj = penguin.server.roomManager.getRoom(room)
 

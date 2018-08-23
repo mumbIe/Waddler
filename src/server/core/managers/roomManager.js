@@ -49,7 +49,7 @@ class roomManager {
 
 	checkRoomFull(id) {
 		if (this.rooms[id]) {
-			return this.rooms[id].penguins.length == this.roomCrumbs[id].MaxUsers
+			return this.rooms[id].penguins.length === this.roomCrumbs[id].MaxUsers
 		}
 		return false
 	}

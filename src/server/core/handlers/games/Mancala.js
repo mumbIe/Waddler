@@ -143,7 +143,7 @@ class Mancala {
 			while (hand > 0) {
 				stone++;
 
-				if (!this.boardMap[stone] || this.boardMap[stone] == undefined) stone = 0
+				if (!this.boardMap[stone] || this.boardMap[stone] === undefined) stone = 0
 
 				const myMancala = (this.currentPlayer === 1 ? 6 : 13)
 				const opponentMancala = (this.currentPlayer === 1 ? 13 : 6)
@@ -175,7 +175,7 @@ class Mancala {
 			const gameStatus = this.processBoard()
 
 			if (gameStatus === 0) {
-				if ((this.currentPlayer === 1 && stone != 6) || (this.currentPlayer === 2 && stone != 13)) {
+				if ((this.currentPlayer === 1 && stone !== 6) || (this.currentPlayer === 2 && stone !== 13)) {
 					if (this.currentPlayer === 1) {
 						this.currentPlayer = 2
 					} else {
@@ -257,7 +257,7 @@ class Mancala {
 			for (const player of this.tablePlayers[tableId]) {
 				player.sendXt("uz", -1, seatId, penguin.username)
 
-				if (seatId == 1) player.sendXt("sz", -1, 0)
+				if (seatId === 1) player.sendXt("sz", -1, 0)
 			}
 		}
 	}
@@ -272,29 +272,29 @@ class Mancala {
 				const potIndex = parseInt(data[4])
 				const seatId = this.tablePlayers[tableId].indexOf(penguin)
 
-				if (this.tableGames[tableId].currentPlayer == (seatId + 1)) {
+				if (this.tableGames[tableId].currentPlayer === (seatId + 1)) {
 					const result = this.tableGames[tableId].makeMove(potIndex)
-					const opponentSeat = (seatId == 0 ? 1 : 0)
+					const opponentSeat = (seatId === 0 ? 1 : 0)
 					const opponent = this.tablePlayers[tableId][opponentSeat]
 
-					if (result == 1) {
+					if (result === 1) {
 						penguin.addCoins(20)
 						opponent.addCoins(10)
 					}
 
-					if (result == 2) {
+					if (result === 2) {
 						penguin.addCoins(5)
 						opponent.addCoins(5)
 					}
 
 					for (const player of this.tablePlayers[tableId]) {
-						if (result == "f" || result == "c") {
+						if (result === "f" || result === "c") {
 							player.sendXt("zm", -1, seatId, potIndex, result)
 						} else {
 							player.sendXt("zm", -1, seatId, potIndex)
 						}
 
-						if (result == 1 || result == 2) player.sendXt("zo", -1, player.coins)
+						if (result === 1 || result === 2) player.sendXt("zo", -1, player.coins)
 					}
 				} else {
 					console.log("Invalid move -1")

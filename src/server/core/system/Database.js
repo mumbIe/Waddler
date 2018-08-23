@@ -39,14 +39,14 @@ class Database {
 	updateColumn(player, column, value, table) {
 		const type = isNaN(player) ? "username" : "ID"
 
-		return this.knex(table == null ? "penguins" : table).update(column, value).where(type, player).then(() => {}).catch((err) => {
+		return this.knex(table === undefined ? "penguins" : table).update(column, value).where(type, player).then(() => {}).catch((err) => {
 			Logger.error(err)
 		})
 	}
 	getColumn(player, column, table) {
 		const type = isNaN(player) ? "username" : "ID"
 
-		return this.knex(table == null ? "penguins" : table).select(column).where(type, player)
+		return this.knex(table === undefined ? "penguins" : table).select(column).where(type, player)
 	}
 	getColumnByID(ID, column) {
 		return this.knex("penguins").select(column).where({

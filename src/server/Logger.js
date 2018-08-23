@@ -37,7 +37,7 @@ class Logger {
 		this.saveLog("unknown", isDebug ? this.var_dump(msg) : x)
 	}
 	static var_dump(arr) {
-		if (arr.charAt(0) == "<") return arr
+		if (arr.charAt(0) === "<") return arr
 
 		arr = arr.split("%")
 		arr.shift()

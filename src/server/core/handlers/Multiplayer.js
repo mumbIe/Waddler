@@ -68,11 +68,11 @@ class Multiplayer {
 		const method = gameHandlers[type][handler]
 		const func = method["func"]
 
-		if (penguin.server.gameManager.gameType == "F") {
+		if (penguin.server.gameManager.gameType === "F") {
 			return FindFour[func](data, penguin)
-		} else if (penguin.server.gameManager.gameType == "M") {
+		} else if (penguin.server.gameManager.gameType === "M") {
 			return Mancala[func](data, penguin)
-		} else if (penguin.server.gameManager.gameType == "T") {
+		} else if (penguin.server.gameManager.gameType === "T") {
 			return TreasureHunt[func](data, penguin)
 		}
 	}

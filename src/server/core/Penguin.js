@@ -1,16 +1,15 @@
 "use strict"
 
 const Logger = require("../Logger")
-
 const sp = require("./utils/sp")
 
-const Socket = require("./Socket")
-
-class Penguin extends Socket {
+class Penguin {
 	constructor(socket, server) {
-		super(socket)
+		this.socket = socket
 		this.server = server
+
 		this.ipAddr = socket.remoteAddress.split(":").pop()
+
 		this.database = server.database
 		this.roomHandler = server.roomHandler
 	}
@@ -52,6 +51,27 @@ class Penguin extends Socket {
 		this.throttle = {}
 
 		this.getInventory()
+	}
+
+	sendRaw(data) {
+		if (this.socket && this.socket.writable) {
+			Logger.outgoing(data)
+			this.socket.write(data + "\0")
+		}
+	}
+
+	sendXt() {
+		this.sendRaw(`%xt%${Array.prototype.join.call(arguments, "%")}%`)
+	}
+
+	sendError(err, disconnect) {
+		this.sendXt("e", -1, err)
+
+		if (disconnect) this.disconnect()
+	}
+
+	disconnect() {
+		this.server.removePenguin(this)
 	}
 
 	buildPlayerString() {
@@ -131,15 +151,13 @@ class Penguin extends Socket {
 		this.database.alreadyOwnsIgloo(this.id).then((result) => {
 			let igloos = []
 
-			for (const i of result[0].igloos.split("|")) {
-				igloos.push(parseInt(i))
-			}
+			for (const i of result[0].igloos.split("|")) igloos.push(parseInt(i))
 
 			if (igloos.includes(igloo)) return this.sendError(500)
 
 			this.database.addIgloo(this.id, igloo)
 
-			if (this.room.id == (this.id + 1000)) this.sendXt("au", -1, igloo, this.coins)
+			if (this.room.id === (this.id + 1000)) this.sendXt("au", -1, igloo, this.coins)
 		}).catch((err) => {
 			Logger.error(err)
 		})
@@ -165,8 +183,8 @@ class Penguin extends Socket {
 	}
 	addStamp(stampID) {
 		if (isNaN(stampID)) return
-		if (Number(stampID) == 14 && this.age != 183) return
-		if (Number(stampID) == 20 && this.age != 365) return
+		if (Number(stampID) === 14 && this.age !== 183) return
+		if (Number(stampID) === 20 && this.age !== 365) return
 
 		const stamps = require("../crumbs/stamps")
 
@@ -175,7 +193,7 @@ class Penguin extends Socket {
 		if (this.stamps.length != 0) {
 			this.stamps.forEach(stamp => {
 				stamp = stamp.split("|")
-				if (Number(stamp[0]) == stampID) return
+				if (Number(stamp[0]) === stampID) return
 			})
 		}
 
@@ -231,8 +249,7 @@ class Penguin extends Socket {
 		this.coins -= coins
 		this.updateColumn("coins", this.coins)
 	}
-
-	updateColumn(column, value, table = null) {
+	updateColumn(column, value, table) {
 		this.database.updateColumn(this.id, column, value, table).catch((err) => {
 			Logger.error(err)
 		})
@@ -241,7 +258,7 @@ class Penguin extends Socket {
 		this[type] = item
 		this.updateColumn(type, item)
 	}
-	getColumn(column, table = null) {
+	getColumn(column, table) {
 		return this.database.getColumn(this.id, column, table)
 	}
 	getColumnByID(ID, column) {

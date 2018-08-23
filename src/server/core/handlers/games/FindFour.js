@@ -33,14 +33,6 @@ class FindFour {
 		return boardMap.slice(0, -1)
 	}
 
-	switchPlayer() {
-		if (this.currentPlayer == 1) {
-			this.currentPlayer = 2
-		} else {
-			this.currentPlayer = 1
-		}
-	}
-
 	validPlacement(column, row) {
 		if (this.boardMap[row][column] !== 0) return false
 		return true
@@ -56,7 +48,7 @@ class FindFour {
 	determineColumnWin(column) {
 		let streak = 0
 		for (const row of this.boardMap) {
-			if (row[column] == this.currentPlayer) {
+			if (row[column] === this.currentPlayer) {
 				streak++
 				if (streak === 4) return 1
 			} else {
@@ -67,8 +59,7 @@ class FindFour {
 	}
 
 	determineVerticalWin() {
-		const rows = this.boardMap.length
-		for (let column = 0; column < rows; column++) {
+		for (let column = 0; column < this.boardMap.length; column++) {
 			const result = this.determineColumnWin(column)
 			if (result === 1) return result
 		}
@@ -76,11 +67,9 @@ class FindFour {
 	}
 
 	determineHorizontalWin() {
-		const rows = this.boardMap.length
 		let streak = 0
-		for (let row = 0; row < rows; row++) {
-			const columns = this.boardMap[row].length
-			for (let column = 0; column < columns; column++) {
+		for (let row = 0; row < this.boardMap.length; row++) {
+			for (let column = 0; column < this.boardMap[row].length; column++) {
 				if (this.boardMap[row][column] === this.currentPlayer) {
 					streak++;
 					if (streak === 4) return 1
@@ -93,11 +82,9 @@ class FindFour {
 	}
 
 	determineDiagonalWin() {
-		const rows = this.boardMap.length
 		let streak = 0
-		for (let row = 0; row < rows; row++) {
-			const columns = this.boardMap[row].length
-			for (let column = 0; column < columns; column++) {
+		for (let row = 0; row < this.boardMap.length; row++) {
+			for (let column = 0; column < this.boardMap[row].length; column++) {
 				if (this.boardMap[row][column] === this.currentPlayer) {
 					if (this.boardMap[row + 1] && this.boardMap[row + 1][column + 1] === this.currentPlayer &&
 						this.boardMap[row + 2] && this.boardMap[row + 2][column + 2] === this.currentPlayer &&
@@ -134,8 +121,17 @@ class FindFour {
 	placeChip(column, row) {
 		if (this.validPlacement(column, row)) {
 			this.boardMap[row][column] = this.currentPlayer
+
 			const gameStatus = this.processBoard()
-			if (gameStatus === 0) this.switchPlayer()
+
+			if (gameStatus === 0) {
+				if (this.currentPlayer === 1) {
+					this.currentPlayer = 2
+				} else {
+					this.currentPlayer = 1
+				}
+			}
+
 			return gameStatus
 		} else {
 			return -1
@@ -204,7 +200,7 @@ class FindFour {
 			for (const player of this.tablePlayers[tableId]) {
 				player.sendXt("uz", -1, seatId, penguin.username)
 
-				if (seatId == 1) player.sendXt("sz", -1, 0)
+				if (seatId === 1) player.sendXt("sz", -1, 0)
 			}
 		}
 	}
@@ -220,16 +216,16 @@ class FindFour {
 				const chipRow = parseInt(data[5])
 				const seatId = this.tablePlayers[tableId].indexOf(penguin)
 
-				if (this.tableGames[tableId].currentPlayer == (seatId + 1)) {
+				if (this.tableGames[tableId].currentPlayer === (seatId + 1)) {
 					const result = this.tableGames[tableId].placeChip(chipColumn, chipRow)
-					const opponentSeat = (seatId == 0 ? 1 : 0)
+					const opponentSeat = (seatId === 0 ? 1 : 0)
 					const opponent = this.tablePlayers[tableId][opponentSeat]
 
-					if (result == 1) {
+					if (result === 1) {
 						penguin.addCoins(20)
 						opponent.addCoins(10)
 					}
-					if (result == 2) {
+					if (result === 2) {
 						penguin.addCoins(5)
 						opponent.addCoins(5)
 					}
@@ -237,7 +233,7 @@ class FindFour {
 					for (const player of this.tablePlayers[tableId]) {
 						player.sendXt("zm", -1, seatId, chipColumn, chipRow)
 
-						if (result == 1 || result == 2) player.sendXt("zo", -1, player.coins)
+						if (result === 1 || result === 2) player.sendXt("zo", -1, player.coins)
 					}
 				}
 			}

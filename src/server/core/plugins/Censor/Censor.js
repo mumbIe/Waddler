@@ -25,7 +25,7 @@ class Censor {
 		if (!regexp) {
 			const regexp = new RegExp(require("./dictionary").join("|"), "gi")
 		}
-		return str.match(regexp) == null ? false : true
+		return str.match(regexp) === null ? false : true
 	}
 }
 

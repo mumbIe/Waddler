@@ -5,7 +5,7 @@ class Bot {
 		const botArr = [
 			0, // ID
 			"Bot", // Username
-			45,
+			1,
 			1, // Color
 			122, // Head
 			0, // Face

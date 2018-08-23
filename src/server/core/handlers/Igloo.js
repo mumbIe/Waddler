@@ -21,7 +21,7 @@ class Igloo {
 		penguin.doesIDExist(penguinID).then((exists) => {
 			if (!exists) return
 
-			if (penguin.id != penguinID) return penguin.disconnect()
+			if (penguin.id !== penguinID) return penguin.disconnect()
 
 			penguin.database.getActiveIgloo(penguin.id).then((result) => {
 				const iglooStr = `${result[0].type}%${result[0].music}%${result[0].floor}%${result[0].furniture}%${result[0].locked}`
@@ -32,7 +32,7 @@ class Igloo {
 	}
 
 	static handleLoadPlayerIglooList(data, penguin) {
-		if (penguin.openIgloos.length == 0 || Object.keys(penguin.openIgloos).length == 0) return penguin.sendXt("gr", -1)
+		if (penguin.openIgloos.length === 0 || Object.keys(penguin.openIgloos).length === 0) return penguin.sendXt("gr", -1)
 
 		let iglooList = []
 
@@ -58,10 +58,10 @@ class Igloo {
 		if (furniture.length > 99) {
 			let addStamp = true
 
-			if (penguin.stamps.length != 0) {
+			if (penguin.stamps.length !== 0) {
 				penguin.stamps.forEach(stamp => {
 					stamp = stamp.split("|")
-					if (Number(stamp[0]) == 23) addStamp = false
+					if (Number(stamp[0]) === 23) addStamp = false
 				})
 			}
 
@@ -89,7 +89,7 @@ class Igloo {
 		penguin.doesIDExist(penguinID).then((exists) => {
 			if (!exists) return
 
-			if (penguin.id != penguinID) return penguin.disconnect()
+			if (penguin.id !== penguinID) return penguin.disconnect()
 
 			penguin.openIgloos[penguin.id] = penguin.username
 		})
@@ -103,7 +103,7 @@ class Igloo {
 		penguin.doesIDExist(penguinID).then((exists) => {
 			if (!exists) return
 
-			if (penguin.id != penguinID) return penguin.disconnect()
+			if (penguin.id !== penguinID) return penguin.disconnect()
 
 			delete penguin.openIgloos[penguin.id]
 		})
