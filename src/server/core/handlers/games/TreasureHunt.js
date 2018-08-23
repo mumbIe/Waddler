@@ -1,5 +1,9 @@
 "use strict"
 
+/*
+ * Fully working treasurehunt, ported from Houdini, RBSE and iCPro3.1 by Zaseth.
+ */
+
 class TreasureHunt {
 	constructor() {
 		this.boardMap = [
@@ -19,6 +23,7 @@ class TreasureHunt {
 		this.gemAmount = 0
 		this.gemsFound = 0
 		this.rareGemFound = false
+
 		this.coinAmount = 0
 		this.coinsFound = 0
 		this.turnAmount = 12
@@ -152,7 +157,11 @@ class TreasureHunt {
 			const board = this.tableGames[tableId].toString()
 			const [playerOne, playerTwo] = players
 
-			penguin.sendXt("gz", -1, playerOne, playerTwo, board)
+			if (this.tablePlayers[tableId].length == 2) {
+				return penguin.sendXt("gz", -1, playerOne, "")
+			}
+
+			penguin.sendXt("gz", -1, playerOne, playerTwo, `10%10%35%1%12%25%1%1,5%${board}`)
 		}
 	}
 
@@ -160,14 +169,19 @@ class TreasureHunt {
 		if (penguin.tableId) {
 			const tableId = penguin.tableId
 			const tableObj = this.tablePopulation[tableId]
-			const seatId = Object.keys(tableObj).length - 1
+			const players = Object.keys(tableObj)
+			const seatId = players.length - 1
+			const board = this.tableGames[tableId].toString()
+			const [playerOne, playerTwo] = players
 
 			penguin.sendXt("jz", -1, seatId)
 
 			for (const player of this.tablePlayers[tableId]) {
 				player.sendXt("uz", -1, seatId, penguin.username)
 
-				if (seatId == 1) player.sendXt("sz", -1, 0)
+				if (this.tablePlayers[tableId].length == 2) {
+					player.sendXt("sz", -1, playerOne, playerTwo, `10%10%35%1%12%25%1%1,5%${board}`)
+				}
 			}
 		}
 	}
@@ -182,11 +196,6 @@ class TreasureHunt {
 				const buttonMC = data[4]
 				const digDirection = data[5]
 				const buttonNum = data[6]
-				console.log({
-					buttonMC,
-					digDirection,
-					buttonNum
-				})
 				const seatId = this.tablePlayers[tableId].indexOf(penguin)
 
 				if (this.tableGames[tableId].currentPlayer == (seatId + 1)) {
@@ -200,9 +209,9 @@ class TreasureHunt {
 					}
 
 					for (const player of this.tablePlayers[tableId]) {
-						player.sendXt("zm", -1, seatId, buttonMC, digDirection, buttonNum)
+						player.sendXt("zm", -1, buttonMC, digDirection, buttonNum)
 
-						if (result == 1 || result == 2) player.sendXt("zo", -1, player.coins)
+						if (result[0] == "done") player.sendXt("zo", -1, player.coins)
 					}
 				}
 			}

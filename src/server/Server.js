@@ -50,13 +50,13 @@ class Server {
 
 			this.penguins.push(penguin)
 
-			Logger.info(`${penguin.ipAddr} connected`)
+			Logger.info(`A client has connected`)
 
 			socket.on("data", (data) => {
 				return this.dataHandler.handleData(data.toString().split("\0")[0], penguin)
 			})
 			socket.on("close", () => {
-				Logger.info(`${penguin.ipAddr} disconnected`)
+				Logger.info(`A client has disconnected`)
 				return penguin.disconnect()
 			})
 			socket.on("error", (error) => {

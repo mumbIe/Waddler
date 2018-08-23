@@ -7,8 +7,8 @@
 class Mancala {
 	constructor() {
 		this.boardMap = [
-			4, 4, 4, 4, 4, 4, 0, // The first 6 numbers are for player 1, where 0 is the basket (right-side of table)
-			4, 4, 4, 4, 4, 4, 0 // The second 6 numbers are for player 2, where 0 is the basket (left-side of table)
+			4, 4, 4, 4, 4, 4, 0,
+			4, 4, 4, 4, 4, 4, 0
 		]
 		this.currentPlayer = 1
 		this.winner = 0
@@ -17,16 +17,13 @@ class Mancala {
 		this.tablePopulation = []
 		this.tablePlayers = []
 
-		for (let i = 100; i <= 104; i++) { // '<=' adds all the tables where '<' misses table 104
+		for (let i = 100; i <= 104; i++) {
 			this.tableGames[i] = null
 			this.tablePopulation[i] = {}
 			this.tablePlayers[i] = []
 		}
 	}
 
-	/*
-	 * PHP implementation scripts, taken from Locutus.io
-	 */
 	sum(a) {
 		let s = 0
 
@@ -98,27 +95,16 @@ class Mancala {
 		}
 	}
 
-	/*
-	 * Joins the board together (player 1 and player 2's baskets).
-	 */
 	toString() {
 		return this.boardMap.join(",")
 	}
 
-	/*
-	 * Checks whether you're not nuking the game dropping 14+ stones.
-	 */
 	validMove(stone) {
 		if (this.currentPlayer === 1 && !this.range(0, 7).includes(stone)) return false
 		if (this.currentPlayer === 2 && !this.range(7, 14).includes(stone)) return false
 		return true
 	}
 
-	/*
-	 * Uses PHP's array_slice as boardMap.slice isn't precise enough.
-	 * Counts the first 6 numbers for both players' baskets if it's 0 or equal to each other.
-	 * Technically speaking: is [1, 1, 1, 1, 1, 1] equal to [1, 1, 1, 1, 1, 1]?
-	 */
 	determineTie() {
 		if (this.sum(this.slice(this.boardMap, 0, 6)) === 0 || this.sum(this.slice(this.boardMap, 7, 6)) === 0) {
 			if (this.sum(this.slice(this.boardMap, 0, 6)) === this.sum(this.slice(this.boardMap, 7, 6))) {
@@ -128,11 +114,6 @@ class Mancala {
 		return 3
 	}
 
-	/*
-	 * Counts the first 6 numbers for both players' baskets if it's 0 or equal to each other.
-	 * If player 1's stone count in the baskets is greater than player 2's stone count in the baskets,
-	 * Player 1 is the winner, else it's player 2.
-	 */
 	determineWin() {
 		if (this.sum(this.slice(this.boardMap, 0, 6)) === 0 || this.sum(this.slice(this.boardMap, 7, 6)) === 0) {
 			if (this.sum(this.slice(this.boardMap, 0, 6)) > this.sum(this.slice(this.boardMap, 7, 6))) {
@@ -145,10 +126,6 @@ class Mancala {
 		return 3
 	}
 
-	/*
-	 * Fully checks the board if there's a tie or a win.
-	 * If there's no tie or win, both players still have stones to play with.
-	 */
 	processBoard() {
 		const tie = this.determineTie()
 		if (tie === 2) return tie
@@ -157,9 +134,6 @@ class Mancala {
 		return 0
 	}
 
-	/*
-	 * Handles stone movements.
-	 */
 	makeMove(stone) {
 		if (this.validMove(stone)) {
 			let capture = false,

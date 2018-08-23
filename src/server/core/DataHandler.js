@@ -26,10 +26,7 @@ class DataHandler {
 				if (result.password == hash && this.failedLogins[penguin.ipAddr].length < 7) {
 					delete this.failedLogins[penguin.ipAddr]
 
-					const seededLogin = GameDataEncryptor.encryptZasethV2(GameDataEncryptor.generateRandomKey(12), "Canthaxme")
-
-					penguin.loginKey = seededLogin[1]
-					if (seededLogin[0] != 2178963) return
+					penguin.loginKey = GameDataEncryptor.generateRandomKey(12)
 
 					this.database.updateColumn(username, "loginKey", penguin.loginKey)
 

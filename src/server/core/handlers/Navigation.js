@@ -38,17 +38,16 @@ class Navigation {
 			return penguin.sendXt("jg", -1, room)
 		}
 
-		if (penguin.server.roomManager.checkRoomFull(room)) return penguin.sendError(210)
-
 		const roomObj = penguin.server.roomManager.getRoom(room)
 
 		if (roomObj) {
+			if (penguin.server.roomManager.checkRoomFull(room)) return penguin.sendError(210)
 			roomObj.addPenguin(penguin, [x, y])
 			if (penguin.server.pluginLoader.getPlugin("Bot")) {
 				penguin.sendXt("ap", -1, penguin.server.pluginLoader.getPlugin("Bot").generateBotString())
 			}
 		} else {
-			penguin.sendError(213)
+			penguin.sendError(210)
 		}
 	}
 
@@ -69,9 +68,10 @@ class Navigation {
 		const roomObj = penguin.server.roomManager.getRoom(room)
 
 		if (roomObj) {
+			if (penguin.server.roomManager.checkRoomFull(room)) return penguin.sendError(210)
 			roomObj.addPenguin(penguin, [x, y])
 		} else {
-			penguin.sendError(213)
+			penguin.sendError(210)
 		}
 	}
 
