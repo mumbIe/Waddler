@@ -128,6 +128,14 @@ class Server {
 		return false
 	}
 
+	getPlugin(plugin) {
+		return this.pluginLoader.getPlugin(plugin)
+	}
+
+	isPluginEnabled(plugin) {
+		return this.getPlugin(plugin) !== undefined
+	}
+
 	handleShutdown() {
 		if (this.penguins.length > 0) {
 			Logger.info("Server shutting down in 3 seconds")

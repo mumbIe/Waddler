@@ -10,7 +10,13 @@ class Igloo {
 	}
 
 	static handleGetFurniture(data, penguin) {
-		return penguin.getFurniture()
+		penguin.database.getFurnitureAndQuantity(penguin.id).then((result) => {
+			if (result.length <= 0) return penguin.sendXt("gf", -1, "")
+
+			result.forEach(row => {
+				penguin.sendXt("gf", -1, [row.furnitureID, row.quantity].join("|") + "|")
+			})
+		})
 	}
 
 	static handleGetActiveIgloo(data, penguin) {
@@ -32,7 +38,7 @@ class Igloo {
 	}
 
 	static handleLoadPlayerIglooList(data, penguin) {
-		if (penguin.openIgloos.length === 0 || Object.keys(penguin.openIgloos).length === 0) return penguin.sendXt("gr", -1)
+		if (penguin.openIgloos.length === 0 || Object.keys(penguin.openIgloos).length === 0) return penguin.sendXt("gr", -1, "")
 
 		let iglooList = []
 
@@ -47,28 +53,20 @@ class Igloo {
 	}
 
 	static handleGetIgloos(data, penguin) {
-		penguin.getIgloos()
-		penguin.sendXt("go", -1, penguin.igloos)
+		penguin.database.getColumn(penguin.id, "igloos").then((result) => {
+			let iglooStr = result[0].igloos
+
+			if (iglooStr.length <= 0) return penguin.sendXt("go", -1, "")
+
+			penguin.sendXt("go", -1, iglooStr.split("|").join("|"))
+		})
 	}
 
 	static handleSaveFurniture(data, penguin) {
 		let furniture = data.join(",").substr(13)
 
 		if (furniture.length < 1) return penguin.updateColumn("furnitureID", "[]", "furniture")
-		if (furniture.length > 99) {
-			let addStamp = true
-
-			if (penguin.stamps.length !== 0) {
-				penguin.stamps.forEach(stamp => {
-					stamp = stamp.split("|")
-					if (Number(stamp[0]) === 23) addStamp = false
-				})
-			}
-
-			if (addStamp) penguin.addStamp(23)
-
-			return penguin.sendError(10006)
-		}
+		if (furniture.length > 99) return penguin.sendError(10006)
 
 		penguin.updateColumn("furniture", furniture, "igloo")
 	}

@@ -37,7 +37,7 @@ const MULTIPLE_ARGUMENTS = {
 
 class Commands {
 	static handleCommand(command, argument, penguin) {
-		if (!penguin.server.pluginLoader.getPlugin("Bot")) throw new Error("Bot plugin must be enabled to use commands")
+		if (!penguin.server.isPluginEnabled("Bot")) throw new Error("Bot plugin must be enabled to use commands")
 
 		const Bot = penguin.server.pluginLoader.getPlugin("Bot")
 
@@ -101,6 +101,7 @@ class Commands {
 	static handleGiftCoins(argument, penguin, Bot) {
 		if (!penguin.moderator) return
 		if (isNaN(argument[0])) return Bot.sendMessage(`/gc <amount> <username>`, penguin)
+		if (argument[1] === penguin.username) return Bot.sendMessage("You can't gift yourself coins", penguin)
 
 		const playerObj = penguin.server.getPenguinByUsername(argument[1])
 

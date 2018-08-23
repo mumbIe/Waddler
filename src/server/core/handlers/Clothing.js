@@ -34,8 +34,17 @@ class Clothing {
 	}
 
 	static handleGetInventory(data, penguin) {
-		penguin.getInventory()
-		penguin.sendXt("gi", -1, penguin.inventory.join("%"))
+		let inventory = []
+
+		penguin.database.getColumn(penguin.id, "itemID", "inventory").then((result) => {
+			if (result.length <= 0) return penguin.sendXt("gi", -1, "")
+
+			result.forEach(row => {
+				inventory.push(row.itemID)
+			})
+
+			penguin.sendXt("gi", -1, inventory.join("%"))
+		})
 	}
 }
 

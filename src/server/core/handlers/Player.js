@@ -139,8 +139,8 @@ class Player {
 		if (message.length <= 0 || message.length > 48 && parseInt(data[4]) !== 0 && !penguin.moderator) return penguin.sendError(5, true)
 		if (penguin.muted) return
 
-		let commandsEnabled = penguin.server.pluginLoader.getPlugin("Commands") ? true : false
-		let censorEnabled = penguin.server.pluginLoader.getPlugin("Censor") ? true : false
+		let commandsEnabled = penguin.server.isPluginEnabled("Commands")
+		let censorEnabled = penguin.server.isPluginEnabled("Censor")
 
 		if (commandsEnabled && message.charAt(0) === "/") {
 			const command = message.substr(1)
@@ -150,11 +150,11 @@ class Player {
 
 			const argument = message
 
-			return penguin.server.pluginLoader.getPlugin("Commands").handleCommand(command, argument, penguin)
+			return penguin.server.getPlugin("Commands").handleCommand(command, argument, penguin)
 		} else {
 			if (censorEnabled) {
-				if (penguin.moderator) return penguin.room.sendXt("mm", -1, penguin.server.pluginLoader.getPlugin("Censor").censorCheck(message), penguin.id)
-				return penguin.room.sendXt("sm", -1, penguin.id, penguin.server.pluginLoader.getPlugin("Censor").censorCheck(message))
+				if (penguin.moderator) return penguin.room.sendXt("mm", -1, penguin.server.getPlugin("Censor").censorCheck(message), penguin.id)
+				return penguin.room.sendXt("sm", -1, penguin.id, penguin.server.getPlugin("Censor").censorCheck(message))
 			}
 		}
 	}

@@ -83,26 +83,39 @@ class Stamps {
 		penguin.doesIDExist(penguinID).then((exists) => {
 			if (!exists) return
 
-			penguin.getColumnByID(penguinID, "cover").then((result) => {
+			penguin.database.getColumn(penguinID, "cover").then((result) => {
 				penguin.sendXt("gsbcd", -1, result[0].cover)
 			})
 		})
 	}
 
 	static handleSetStampBookCoverDetails(data, penguin) {
-		if (isNaN(parseInt(data[4])) || isNaN(parseInt(data[5])) || isNaN(parseInt(data[6])) || isNaN(parseInt(data[7]))) return penguin.disconnect()
+		const p4 = parseInt(data[4]),
+			p5 = parseInt(data[5]),
+			p6 = parseInt(data[6]),
+			p7 = parseInt(data[7])
 
-		let cover = [parseInt(data[4]), parseInt(data[5]), parseInt(data[6]), parseInt(data[7])].join("%")
+		if (isNaN(p4) || isNaN(p5) || isNaN(p6) || isNaN(p7)) return penguin.disconnect()
+
+		let cover = [p4, p5, p6, p7].join("%")
 		cover += "%"
 
 		data.forEach(row => {
-			if (row.length > 13) cover += `%${row}`
+			if (row.length > 13) {
+				const exploitCheck = row.split("|")
+
+				exploitCheck.forEach(attri => {
+					if (isNaN(attri)) return penguin.disconnect()
+				})
+
+				cover += `%${row}`
+			}
 		})
 
 		penguin.getColumn("cover").then((result) => {
-			if (cover !== result[0].cover) {
-				penguin.updateColumn("cover", cover)
-			}
+			if (cover === result[0].cover) return
+
+			penguin.updateColumn("cover", cover)
 		})
 
 		penguin.sendXt("ssbcd", -1)

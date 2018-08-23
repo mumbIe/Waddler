@@ -349,8 +349,8 @@ class Pet {
 
 			puffleName = String(puffleName).replace(/\W/g, "")
 
-			if (penguin.server.pluginLoader.getPlugin("Censor")) {
-				if (penguin.server.pluginLoader.getPlugin("Censor").containsSwear(puffleName)) {
+			if (penguin.server.isPluginEnabled("Censor")) {
+				if (penguin.server.getPlugin("Censor").containsSwear(puffleName)) {
 					return penguin.sendError(441)
 				}
 			}
