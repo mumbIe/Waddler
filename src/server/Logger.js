@@ -24,19 +24,19 @@ class Logger {
 	static incoming(msg) {
 		const x = `[INCOMING] > ${msg}`
 		console.log(`\x1b[46m%s\x1b[0m`, x)
-		this.saveLog("incoming", isDebug ? this.var_dump(msg) : x)
+		this.saveLog("incoming", isDebug ? this.print_r(msg) : x)
 	}
 	static outgoing(msg) {
 		const x = `[OUTGOING] > ${msg}`
 		console.log(`\x1b[46m%s\x1b[0m`, x)
-		this.saveLog("outgoing", isDebug ? this.var_dump(msg) : x)
+		this.saveLog("outgoing", isDebug ? this.print_r(msg) : x)
 	}
 	static unknown(msg) {
 		const x = `[UNKNOWN PACKET] > ${msg}`
 		console.log(`\x1b[41m%s\x1b[0m`, x)
-		this.saveLog("unknown", isDebug ? this.var_dump(msg) : x)
+		this.saveLog("unknown", isDebug ? this.print_r(msg) : x)
 	}
-	static var_dump(arr) {
+	static print_r(arr) {
 		if (arr.charAt(0) === "<") return arr
 
 		arr = arr.split("%")
