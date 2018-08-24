@@ -1,6 +1,6 @@
 # Waddler
 
-An open source in-development Club Penguin emulator, written in Node.js.
+A rich-featured open source Club Penguin emulator, written in Node.js.
 
 # Features
 
@@ -10,7 +10,9 @@ An open source in-development Club Penguin emulator, written in Node.js.
 * Uses the latest, fastest and securest modules
 * Uses the latest crumbs
 * Everything that is logged is stored in separate text files in a nice format
-* Advanced multiplayer handler that allows you to add multiple minigames (supports Find Four, Mancala and Treasurehunt by default)
+* Advanced multiplayer handler that allows you to add multiple minigames
+* Supports 3 minigames: Find Four, Mancala and Treasurehunt
+* Supports functions like: Igloos, Puffles, Postcards and more
 * Throttling system
 * Comes with a command system (default commands are already added)
 * Advanced censoring system
@@ -22,7 +24,7 @@ An open source in-development Club Penguin emulator, written in Node.js.
 * [Node.js](https://nodejs.org/en/)
 * [MySQL](https://www.mysql.com)
 * [NGINX](https://www.nginx.com) or [APACHE](https://httpd.apache.org)
-* Download and extract an Actionscript 2 mediaserver into your htdocs
+* Download and extract an Actionscript 2 mediaserver into your htdocs (https://mega.nz/#!Jl4xxJKD!QFHEYej4TBt6TnbZsZoLO-NiPh5jDPNR_vh69GeLfC8 <- preconfigured `localhost` Waddler mediaserver)
 * Download and extract Waddler into a folder
 
 ## MySQL
