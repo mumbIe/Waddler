@@ -172,6 +172,35 @@ class Database {
 			puffleWalk: 0
 		})
 	}
+
+	getUnreadPostcardCount(ID) {
+		return this.knex("mail").where("read", 0).where("recipientID", ID).count("read as CNT")
+	}
+	getPostcardCount(ID) {
+		return this.knex("mail").select("recipientID").where("recipientID", ID)
+	}
+	getPostcardsById(ID) {
+		return this.knex("mail").select("*").where("recipientID", ID)
+	}
+	mailChecked(ID) {
+		return this.knex("mail").update("read", 1).where("recipientID", ID)
+	}
+	insertMail(recipientID, senderName, senderID, postcardDetails, sentDate, postcardType) {
+		return this.knex("mail").insert({
+			recipientID: recipientID,
+			senderName: senderName,
+			senderID: senderID,
+			details: postcardDetails,
+			date: sentDate,
+			type: postcardType
+		})
+	}
+	deleteMail(mailID) {
+		return this.knex("mail").del().where("ID", mailID)
+	}
+	deleteMailFromPlayer(recipientID, senderID) {
+		return this.knex("mail").del().where("recipientID", recipientID).where("senderID", senderID)
+	}
 }
 
 module.exports = Database

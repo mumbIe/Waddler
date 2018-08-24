@@ -10,7 +10,7 @@ class Stamps {
 			if (result.length <= 0) return penguin.sendXt("gps", -1, penguin.id, "")
 
 			result.forEach(row => {
-				penguin.stamps.push(`${penguin.id}|${row.stampID}`)
+				penguin.stamps.push(row.stampID)
 				stampStr += `${row.stampID}|`
 			})
 

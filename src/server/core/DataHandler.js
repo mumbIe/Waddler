@@ -68,7 +68,6 @@ class DataHandler {
 			handler: data[2]
 		}
 
-		if (xt_packet.handler.split("#")[1].startsWith("epf") || xt_packet.handler.split("#")[0] === "iCP") return
 		if (xt_packet.xt !== "xt") return penguin.disconnect()
 
 		const xt_method = xtHandlers[xt_packet.type][xt_packet.handler]

@@ -97,22 +97,16 @@ class ClubPenguin {
 
 	addStamp(stampID) {
 		if (isNaN(stampID)) return
-		if (Number(stampID) === 14 && this.age !== 183) return
-		if (Number(stampID) === 20 && this.age !== 365) return
 
 		const stamps = require("../crumbs/stamps")
 
 		if (!stamps[stampID]) return
 
-		if (this.stamps.length != 0) {
-			this.stamps.forEach(stamp => {
-				stamp = stamp.split("|")
-				if (Number(stamp[0]) === stampID) return
-			})
-		}
+		if (this.stamps.includes(stampID)) return
 
 		this.database.insertStamp(this.id, stampID).then(() => {
 			this.sendXt("aabs", -1, stampID)
+			this.stamps.push(stampID)
 		})
 	}
 }

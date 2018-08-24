@@ -51,7 +51,10 @@ class Penguin extends ClubPenguin {
 		this.buddies = []
 		this.ignored = []
 		this.requests = []
+
 		this.stamps = []
+		this.inventory = []
+		this.postcards = []
 
 		this.throttle = {}
 	}

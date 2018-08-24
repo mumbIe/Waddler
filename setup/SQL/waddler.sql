@@ -78,6 +78,23 @@ LOCK TABLES `puffles` WRITE;
 INSERT INTO `puffles` VALUES (100, 10, 'Slave', 1, 100, 100, 100, 0);
 UNLOCK TABLES;
 
+DROP TABLE IF EXISTS `mail`;
+CREATE TABLE `mail` (
+    `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `senderID` int(10) UNSIGNED NOT NULL,
+    `senderName` varchar(12) NOT NULL,
+    `recipientID` int(10) UNSIGNED NOT NULL,
+    `type` smallint(5) UNSIGNED NOT NULL,
+    `date` char(255) NOT NULL,
+    `details` char(255) NOT NULL DEFAULT '',
+    `read` tinyint(1) NOT NULL DEFAULT 0,
+    PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+
+LOCK TABLES `mail` WRITE;
+INSERT INTO `mail` VALUES (10, 101, 'Daan', 100, 177, '1535103299', '', 0);
+UNLOCK TABLES;
+
 DROP TABLE IF EXISTS `penguins`;
 CREATE TABLE `penguins` (
     `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,

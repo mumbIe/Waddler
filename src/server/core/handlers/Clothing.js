@@ -43,6 +43,8 @@ class Clothing {
 				inventory.push(row.itemID)
 			})
 
+			penguin.inventory = inventory
+
 			penguin.sendXt("gi", -1, inventory.join("%"))
 		})
 	}

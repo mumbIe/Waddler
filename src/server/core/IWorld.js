@@ -13,6 +13,7 @@ const Ignore = require("./handlers/Ignore")
 const Buddy = require("./handlers/Buddy")
 
 const Stamps = require("./handlers/Stamps")
+const Mail = require("./handlers/Mail")
 const Multiplayer = require("./handlers/Multiplayer")
 
 const xtHandlers = {
@@ -411,6 +412,36 @@ const xtHandlers = {
 			func: "handleAddStamp",
 			file: Stamps,
 			throttle: true
+		},
+		"l#mst": {
+			func: "handleStartMail",
+			file: Mail,
+			throttle: true
+		},
+		"l#mg": {
+			func: "handleGetMail",
+			file: Mail,
+			throttle: true
+		},
+		"l#mc": {
+			func: "handleMailChecked",
+			file: Mail,
+			throttle: true
+		},
+		"l#ms": {
+			func: "handleSendMail",
+			file: Mail,
+			throttle: true
+		},
+		"l#md": {
+			func: "handleDeleteMailItem",
+			file: Mail,
+			throttle: false
+		},
+		"l#mdp": {
+			func: "handleDeleteMailItemFromPlayer",
+			file: Mail,
+			throttle: false
 		},
 		"a#gt": {
 			func: "handleMultiplayerData",
