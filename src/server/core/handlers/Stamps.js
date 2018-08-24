@@ -3,18 +3,26 @@
 const sp = require("../utils/sp")
 
 class Stamps {
-	static handleGetStamps(data, penguin) {
-		let stampStr = ""
+	static handleGetStamps(data, penguin, fromJS = false) {
+		const penguinID = fromJS ? penguin.id : parseInt(data[4])
 
-		penguin.database.getStamps(penguin.id).then((result) => {
-			if (result.length <= 0) return penguin.sendXt("gps", -1, penguin.id, "")
+		if (isNaN(penguinID)) return penguin.disconnect()
 
-			result.forEach(row => {
-				penguin.stamps.push(row.stampID)
-				stampStr += `${row.stampID}|`
+		penguin.doesIDExist(penguinID).then((exists) => {
+			if (!exists) return
+
+			let stampStr = ""
+
+			penguin.database.getStamps(penguinID).then((result) => {
+				if (result.length <= 0) return penguin.sendXt("gps", -1, penguinID, "")
+
+				result.forEach(row => {
+					penguin.stamps.push(row.stampID)
+					stampStr += `${row.stampID}|`
+				})
+
+				penguin.sendXt("gps", -1, penguinID, `${stampStr.slice(0, -1)}`)
 			})
-
-			penguin.sendXt("gps", -1, penguin.id, `${stampStr.slice(0, -1)}`)
 		})
 	}
 

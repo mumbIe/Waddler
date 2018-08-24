@@ -136,8 +136,8 @@ class Mancala {
 
 	makeMove(stone) {
 		if (this.validMove(stone)) {
-			let capture = false,
-				hand = this.boardMap[stone]
+			let capture = false
+			let hand = this.boardMap[stone]
 			this.boardMap[stone] = 0
 
 			while (hand > 0) {
@@ -176,11 +176,7 @@ class Mancala {
 
 			if (gameStatus === 0) {
 				if ((this.currentPlayer === 1 && stone !== 6) || (this.currentPlayer === 2 && stone !== 13)) {
-					if (this.currentPlayer === 1) {
-						this.currentPlayer = 2
-					} else {
-						this.currentPlayer = 1
-					}
+					this.currentPlayer === 1 ? this.currentPlayer = 2 : this.currentPlayer = 1
 
 					if (capture) return "c"
 				} else {
@@ -201,8 +197,7 @@ class Mancala {
 
 		for (const tableId of data) {
 			if (this.tablePopulation[tableId]) {
-				const tableObj = this.tablePopulation[tableId]
-				const seatId = Object.keys(tableObj).length
+				const seatId = Object.keys(this.tablePopulation[tableId]).length
 
 				tablePopulation += `${tableId}|${seatId}%`
 			}
@@ -216,8 +211,10 @@ class Mancala {
 		penguin.server.tablePlayers = this.tablePlayers
 
 		const tableId = parseInt(data[4])
-		const tableObj = this.tablePopulation[tableId]
-		let seatId = Object.keys(tableObj).length
+
+		if (isNaN(tableId)) return
+
+		let seatId = Object.keys(this.tablePopulation[tableId]).length
 
 		if (!this.tableGames[tableId]) this.tableGames[tableId] = this
 
@@ -228,29 +225,28 @@ class Mancala {
 
 		penguin.sendXt("jt", -1, tableId, seatId)
 		penguin.room.sendXt("ut", -1, tableId, seatId)
+
 		penguin.tableId = tableId
 	}
 
 	handleLeaveTable(data, penguin) {
-		penguin.server.gameManager.leaveTable(penguin)
+		return penguin.server.gameManager.leaveTable(penguin)
 	}
 
 	handleGetGame(data, penguin) {
 		if (penguin.tableId) {
 			const tableId = penguin.tableId
 			const players = Object.keys(this.tablePopulation[tableId])
-			const board = this.tableGames[tableId].toString()
 			const [playerOne, playerTwo] = players
 
-			penguin.sendXt("gz", -1, playerOne, playerTwo, board)
+			penguin.sendXt("gz", -1, playerOne, playerTwo, this.tableGames[tableId].toString())
 		}
 	}
 
 	handleJoinGame(data, penguin) {
 		if (penguin.tableId) {
 			const tableId = penguin.tableId
-			const tableObj = this.tablePopulation[tableId]
-			const seatId = Object.keys(tableObj).length - 1
+			const seatId = Object.keys(this.tablePopulation[tableId]).length - 1
 
 			penguin.sendXt("jz", -1, seatId)
 
@@ -265,26 +261,24 @@ class Mancala {
 	handleSendMove(data, penguin) {
 		if (penguin.tableId) {
 			const tableId = penguin.tableId
-			const isPlaying = this.tablePlayers[tableId].indexOf(penguin) < 2
-			const isReady = this.tablePlayers[tableId].length >= 2
 
-			if (isPlaying && isReady) {
+			if (this.tablePlayers[tableId].indexOf(penguin) < 2 && this.tablePlayers[tableId].length >= 2) {
 				const potIndex = parseInt(data[4])
+
+				if (isNaN(potIndex)) return
+
 				const seatId = this.tablePlayers[tableId].indexOf(penguin)
 
 				if (this.tableGames[tableId].currentPlayer === (seatId + 1)) {
 					const result = this.tableGames[tableId].makeMove(potIndex)
-					const opponentSeat = (seatId === 0 ? 1 : 0)
-					const opponent = this.tablePlayers[tableId][opponentSeat]
 
 					if (result === 1) {
 						penguin.addCoins(20)
-						opponent.addCoins(10)
+						this.tablePlayers[tableId][(seatId === 0 ? 1 : 0)].addCoins(10)
 					}
-
 					if (result === 2) {
 						penguin.addCoins(5)
-						opponent.addCoins(5)
+						this.tablePlayers[tableId][(seatId === 0 ? 1 : 0)].addCoins(5)
 					}
 
 					for (const player of this.tablePlayers[tableId]) {

@@ -1,5 +1,9 @@
 "use strict"
 
+/*
+ * Fully working FindFour, ported from Kitsune by Zaseth.
+ */
+
 class FindFour {
 	constructor() {
 		this.currentPlayer = 1
@@ -24,13 +28,7 @@ class FindFour {
 	}
 
 	toString() {
-		let boardMap = ""
-		for (let i = 0; i < 7; i++) {
-			for (let x = 0; x < 6; x++) {
-				boardMap += this.boardMap[x][i] + ","
-			}
-		}
-		return boardMap.slice(0, -1)
+		return this.boardMap.join(",")
 	}
 
 	validPlacement(column, row) {
@@ -49,7 +47,7 @@ class FindFour {
 		let streak = 0
 		for (const row of this.boardMap) {
 			if (row[column] === this.currentPlayer) {
-				streak++
+				streak++;
 				if (streak === 4) return 1
 			} else {
 				streak = 0
@@ -124,13 +122,7 @@ class FindFour {
 
 			const gameStatus = this.processBoard()
 
-			if (gameStatus === 0) {
-				if (this.currentPlayer === 1) {
-					this.currentPlayer = 2
-				} else {
-					this.currentPlayer = 1
-				}
-			}
+			if (gameStatus === 0) this.currentPlayer === 1 ? this.currentPlayer = 2 : this.currentPlayer = 1
 
 			return gameStatus
 		} else {
@@ -145,8 +137,7 @@ class FindFour {
 
 		for (const tableId of data) {
 			if (this.tablePopulation[tableId]) {
-				const tableObj = this.tablePopulation[tableId]
-				const seatId = Object.keys(tableObj).length
+				const seatId = Object.keys(this.tablePopulation[tableId]).length
 
 				tablePopulation += `${tableId}|${seatId}%`
 			}
@@ -160,8 +151,10 @@ class FindFour {
 		penguin.server.tablePlayers = this.tablePlayers
 
 		const tableId = parseInt(data[4])
-		const tableObj = this.tablePopulation[tableId]
-		let seatId = Object.keys(tableObj).length
+
+		if (isNaN(tableId)) return
+
+		let seatId = Object.keys(this.tablePopulation[tableId]).length
 
 		if (!this.tableGames[tableId]) this.tableGames[tableId] = this
 
@@ -169,31 +162,31 @@ class FindFour {
 
 		this.tablePopulation[tableId][penguin.username] = penguin
 		this.tablePlayers[tableId].push(penguin)
+
 		penguin.sendXt("jt", -1, tableId, seatId)
 		penguin.room.sendXt("ut", -1, tableId, seatId)
+
 		penguin.tableId = tableId
 	}
 
 	handleLeaveTable(data, penguin) {
-		penguin.server.gameManager.leaveTable(penguin)
+		return penguin.server.gameManager.leaveTable(penguin)
 	}
 
 	handleGetGame(data, penguin) {
 		if (penguin.tableId) {
 			const tableId = penguin.tableId
 			const players = Object.keys(this.tablePopulation[tableId])
-			const board = this.tableGames[tableId].toString()
 			const [playerOne, playerTwo] = players
 
-			penguin.sendXt("gz", -1, playerOne, playerTwo, board)
+			penguin.sendXt("gz", -1, playerOne, playerTwo, this.tableGames[tableId].toString())
 		}
 	}
 
 	handleJoinGame(data, penguin) {
 		if (penguin.tableId) {
 			const tableId = penguin.tableId
-			const tableObj = this.tablePopulation[tableId]
-			const seatId = Object.keys(tableObj).length - 1
+			const seatId = Object.keys(this.tablePopulation[tableId]).length - 1
 
 			penguin.sendXt("jz", -1, seatId)
 
@@ -208,26 +201,25 @@ class FindFour {
 	handleSendMove(data, penguin) {
 		if (penguin.tableId) {
 			const tableId = penguin.tableId
-			const isPlaying = this.tablePlayers[tableId].indexOf(penguin) < 2
-			const isReady = this.tablePlayers[tableId].length >= 2
 
-			if (isPlaying && isReady) {
+			if (this.tablePlayers[tableId].indexOf(penguin) < 2 && this.tablePlayers[tableId].length >= 2) {
 				const chipColumn = parseInt(data[4])
 				const chipRow = parseInt(data[5])
+
+				if (isNaN(chipColumn) || isNaN(chipRow)) return
+
 				const seatId = this.tablePlayers[tableId].indexOf(penguin)
 
 				if (this.tableGames[tableId].currentPlayer === (seatId + 1)) {
 					const result = this.tableGames[tableId].placeChip(chipColumn, chipRow)
-					const opponentSeat = (seatId === 0 ? 1 : 0)
-					const opponent = this.tablePlayers[tableId][opponentSeat]
 
 					if (result === 1) {
 						penguin.addCoins(20)
-						opponent.addCoins(10)
+						this.tablePlayers[tableId][(seatId === 0 ? 1 : 0)].addCoins(10)
 					}
 					if (result === 2) {
 						penguin.addCoins(5)
-						opponent.addCoins(5)
+						this.tablePlayers[tableId][(seatId === 0 ? 1 : 0)].addCoins(5)
 					}
 
 					for (const player of this.tablePlayers[tableId]) {

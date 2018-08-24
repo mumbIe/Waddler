@@ -11,7 +11,7 @@ class Navigation {
 		if (!penguin.loggedIn) return penguin.disconnect()
 
 		penguin.sendXt("js", -1, 1, 0, Number(penguin.moderator), 1)
-		require("./Stamps").handleGetStamps(data, penguin)
+		require("./Stamps").handleGetStamps(data, penguin, true)
 		penguin.sendXt("lp", -1, penguin.buildPlayerString(), penguin.coins, 0, 1440, sp.getTime(), penguin.age, 4, 1)
 
 		this.handleJoinRoom({

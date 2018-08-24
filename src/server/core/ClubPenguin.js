@@ -1,7 +1,13 @@
 "use strict"
 
 class ClubPenguin {
-	constructor() {}
+	constructor() {
+		this.itemCrumbs = require("../crumbs/items")
+		this.furnitureCrumbs = require("../crumbs/furniture")
+		this.iglooCrumbs = require("../crumbs/igloos")
+		this.floorCrumbs = require("../crumbs/floors")
+		this.stampCrumbs = require("../crumbs/stamps")
+	}
 
 	addCoins(coins) {
 		if (isNaN(coins)) return
@@ -25,11 +31,9 @@ class ClubPenguin {
 		}
 		if (this.inventory.includes(itemID)) return this.sendError(400)
 
-		const items = require("../crumbs/items")
+		if (!this.itemCrumbs[itemID]) return this.sendError(402)
 
-		if (!items[itemID]) return this.sendError(402)
-
-		const cost = items[itemID].cost
+		const cost = this.itemCrumbs[itemID].cost
 
 		if (this.coins < cost) return this.sendError(401)
 
@@ -40,11 +44,9 @@ class ClubPenguin {
 	}
 
 	addFurniture(furnitureID) {
-		const furniture = require("../crumbs/furniture")
+		if (!this.furnitureCrumbs[furnitureID]) return this.sendError(402)
 
-		if (!furniture[furnitureID]) return this.sendError(402)
-
-		const cost = furniture[furnitureID].cost
+		const cost = this.furnitureCrumbs[furnitureID].cost
 
 		if (this.coins < cost) return this.sendError(401)
 
@@ -58,11 +60,9 @@ class ClubPenguin {
 	}
 
 	addIgloo(iglooID) {
-		const igloos = require("../crumbs/igloos")
+		if (!this.iglooCrumbs[iglooID]) return this.sendError(402)
 
-		if (!igloos[iglooID]) return this.sendError(402)
-
-		const cost = igloos[iglooID].cost
+		const cost = this.iglooCrumbs[iglooID].cost
 
 		if (this.coins < cost) return this.sendError(401)
 
@@ -82,11 +82,9 @@ class ClubPenguin {
 	}
 
 	addFloor(floorID) {
-		const floors = require("../crumbs/floors")
+		if (!this.floorCrumbs[floorID]) return this.sendError(402)
 
-		if (!floors[floorID]) return this.sendError(402)
-
-		const cost = floors[floorID].cost
+		const cost = this.floorCrumbs[floorID].cost
 
 		if (this.coins < cost) return this.sendError(401)
 
@@ -98,9 +96,7 @@ class ClubPenguin {
 	addStamp(stampID) {
 		if (isNaN(stampID)) return
 
-		const stamps = require("../crumbs/stamps")
-
-		if (!stamps[stampID]) return
+		if (!this.stampCrumbs[stampID]) return
 
 		if (this.stamps.includes(stampID)) return
 
