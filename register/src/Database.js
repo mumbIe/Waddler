@@ -27,17 +27,17 @@ class Database {
 		return this.knex("penguins").insert({
 			username: username,
 			password: hash,
-			registrationdate: date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate(),
+			registrationDate: date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate(),
 			color: color,
 			igloos: "1",
 			cover: "1%1%1%1%"
 		})
 	}
 
-	addColor(id, color) {
+	addColor(ID, color) {
 		return this.knex("inventory").insert({
-			id: id,
-			itemid: color
+			ID: ID,
+			itemID: color
 		})
 	}
 }
