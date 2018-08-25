@@ -10,13 +10,17 @@ class roomManager {
 
 		this.roomCrumbs = require("../../crumbs/rooms")
 
-		for (const id of Object.keys(this.roomCrumbs)) {
-			if (id < 900) {
-				this.createRoom(id)
+		this.server.decodeCrumb("rooms").then((room_crumbs) => {
+			for (const id of Object.keys(room_crumbs)) {
+				if (id < 900) {
+					this.createRoom(id)
+				}
 			}
-		}
 
-		Logger.info(`Loaded ${this.rooms.length} rooms`)
+			Logger.info(`Loaded ${this.rooms.length} rooms`)
+		}).catch((err) => {
+			console.log(err)
+		})
 	}
 
 	createRoom(id) {

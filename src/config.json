@@ -1,9 +1,19 @@
 {
-	"loginPort": 6112,
-	"worldPort": 6113,
 
-	"worldStr": "100|Snowy Island|127.0.0.1|6113",
-	"maxPenguins": 150,
+	"Server": {
+		"1": {
+			"type": "login",
+			"port": 6112
+		},
+		"100": {
+			"type": "world",
+			"name": "Waddler",
+			"host": "127.0.0.1",
+			"port": 6113,
+			"maxPenguins": 150
+		}
+	},
+
 	"debug": false,
 
 	"client": "mysql2",

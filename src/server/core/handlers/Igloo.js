@@ -16,6 +16,8 @@ class Igloo {
 			result.forEach(row => {
 				penguin.sendXt("gf", -1, [row.furnitureID, row.quantity].join("|") + "|")
 			})
+		}).catch((err) => {
+			console.error(err)
 		})
 	}
 
@@ -29,10 +31,12 @@ class Igloo {
 
 			if (penguin.id !== penguinID) return penguin.disconnect()
 
-			penguin.getColumn(penguin.id, "*", "igloo").then((result) => {
+			penguin.getColumn("*", "igloo").then((result) => {
 				const iglooStr = `${result[0].type}%${result[0].music}%${result[0].floor}%${result[0].furniture}%${result[0].locked}`
 
 				penguin.sendXt("gm", -1, penguin.id, iglooStr)
+			}).catch((err) => {
+				console.error(err)
 			})
 		})
 	}
@@ -53,12 +57,14 @@ class Igloo {
 	}
 
 	static handleGetIgloos(data, penguin) {
-		penguin.database.getColumn(penguin.id, "igloos").then((result) => {
+		penguin.getColumn("igloos").then((result) => {
 			let iglooStr = result[0].igloos
 
 			if (iglooStr.length <= 0) return penguin.sendXt("go", -1, "")
 
 			penguin.sendXt("go", -1, iglooStr.split("|").join("|"))
+		}).catch((err) => {
+			console.error(err)
 		})
 	}
 

@@ -9,40 +9,27 @@ const hashPassword = (pass) => {
 const handleRegister = (body, database, res) => {
 	const [username, password, color] = [body.username, body.password, body.color]
 
-	if (_.escape(username) !== username) return res.code(200).send("Your username contains illegal characters")
-	if (_.escape(password) !== password) return res.code(200).send("Your password contains illegal characters")
+	if (_.escape(username) !== username || _.escape(password) !== password) return res.code(200).send("Your username/password contains illegal characters")
+	if (isNaN(color)) return
 
-	database.usernameExists(username).then((result) => {
-		const count = result["count(*)"]
+	database.insertPenguin(username, hashPassword(password), color).then((result) => {
+		const penguinID = parseInt(result)
 
-		if (count !== 0) return res.code(200).send("That username already exists!")
-
-		const hash = hashPassword(password)
-
-		database.insertPenguin(username, hash, color).then((result) => {
-			database.addColor(parseInt(result), color).then((result) => {
+		database.addColor(penguinID, color).then(() => {
+			database.addPostcard(penguinID).then(() => {
 				console.log(`${username} registered`)
+
 				return res.code(200).send(`Successfully registered with the username ${username}`)
-			}).catch((err) => {
-				console.error(error)
-				return res.code(400).send("Something went wrong while trying to insert your color")
 			})
-		}).catch((err) => {
-			console.error(err)
-			return res.code(400).send("Something went wrong while trying to insert your data")
 		})
-	}).catch((err) => {
-		console.error(err)
-		return res.code(400).send("Something went wrong while checking if your username is unique")
+	}).catch(() => {
+		return res.code(200).send("That username already exists!")
 	})
 }
 
 module.exports = function(fastify, opts, next) {
 	fastify.post("/registerPost", (req, res) => {
 		return handleRegister(req.body, opts.database, res)
-	})
-	fastify.get("/registerPost", (req, res) => {
-		return res.code(400).send("That's not going to work my lad")
 	})
 	next()
 }

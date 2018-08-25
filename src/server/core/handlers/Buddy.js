@@ -20,6 +20,8 @@ class Buddy {
 			})
 
 			penguin.sendXt("gb", -1, buddyStr)
+		}).catch((err) => {
+			console.error(err)
 		})
 	}
 
@@ -61,6 +63,8 @@ class Buddy {
 							penguin.requests.splice(penguin.requests.indexOf(toAccept), 1)
 						})
 					})
+				}).catch((err) => {
+					console.error(err)
 				})
 			}
 		})
@@ -128,6 +132,8 @@ class Buddy {
 							penguin.sendXt("rb", -1, toRemove, usernameToRemove)
 						})
 					})
+				}).catch((err) => {
+					console.error(err)
 				})
 			}
 		})

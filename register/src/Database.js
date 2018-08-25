@@ -15,6 +15,11 @@ class Database {
 		})
 	}
 
+	getTime() {
+		const date = new Date()
+		return date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate()
+	}
+
 	usernameExists(username) {
 		return this.knex("penguins").count().first().where({
 			username
@@ -22,12 +27,10 @@ class Database {
 	}
 
 	insertPenguin(username, hash, color) {
-		const date = new Date()
-
 		return this.knex("penguins").insert({
 			username: username,
 			password: hash,
-			registrationDate: date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate(),
+			registrationDate: this.getTime(),
 			color: color,
 			igloos: "1",
 			cover: "1%1%1%1%"
@@ -38,6 +41,17 @@ class Database {
 		return this.knex("inventory").insert({
 			ID: ID,
 			itemID: color
+		})
+	}
+
+	addPostcard(ID) {
+		return this.knex("mail").insert({
+			recipientID: ID,
+			senderName: "sys",
+			senderID: 0,
+			details: "",
+			date: this.getTime(),
+			type: 125
 		})
 	}
 }

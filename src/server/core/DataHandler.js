@@ -12,8 +12,8 @@ class DataHandler {
 	}
 
 	handleLogin(data, penguin) {
-		const username = data.split("CDATA[")[1].split("]]></nick>")[0]
-		const password = data.split("CDATA[")[2].split("]]></pword>")[0]
+		const username = data.split("[")[2].split("]")[0]
+		const password = data.split("[")[4].split("]")[0]
 
 		this.database.getPlayer(username).then((result) => {
 			if (result.banned >= 1) return penguin.sendError(603, true)
@@ -30,8 +30,8 @@ class DataHandler {
 
 					this.database.updateColumn(username, "loginKey", penguin.loginKey)
 
-					penguin.sendXt("sd", -1, require("../../config").worldStr)
-					penguin.sendXt("l", -1, penguin.id, penguin.loginKey, "", `100,${this.server.getServerBars()}`)
+					penguin.sendXt("sd", -1, this.server.getServers())
+					penguin.sendXt("l", -1, penguin.id, penguin.loginKey, "", this.server.getServerPopulation())
 				} else {
 					this.failedLogins[penguin.ipAddr].push(1)
 
@@ -43,6 +43,7 @@ class DataHandler {
 				if (penguinObj) return penguinObj.disconnect()
 
 				const hash = GameDataEncryptor.hashPassword(GameDataEncryptor.decryptZaseth(password, result.loginKey))
+
 				if (result.password === hash) {
 					penguin.sendXt("l", -1)
 					penguin.setPenguin(result)
@@ -82,8 +83,6 @@ class DataHandler {
 
 		if (typeof xt_attributes.file[xt_attributes.func] !== "function") return Logger.error(`No function found for ${xt_attributes.func}`)
 
-		Logger.incoming(packet)
-
 		if (!xt_attributes.throttle) return xt_attributes.file[xt_attributes.func](data, penguin)
 
 		const now = new Date()
@@ -99,6 +98,7 @@ class DataHandler {
 			if (Math.round(now.getTime() / 1000) < Math.round(penguin.throttle[xt_packet.handler][1])) {
 				if (penguin.throttle[xt_packet.handler][0] >= 150) {
 					Logger.info("A client has been disconnected for spamming")
+
 					return penguin.sendError(800, true)
 				}
 			} else {
@@ -112,24 +112,37 @@ class DataHandler {
 	}
 
 	handleData(data, penguin) {
-		if (data.startsWith("<") && data.endsWith(">")) {
-			Logger.incoming(data)
+		Logger.incoming(data)
+
+		const isXML = data.charAt(0) === "<" ? true : false
+		const isXT = data.charAt(0) === "%" ? true : false
+
+		if (isXML) {
 			if (data === "<policy-file-request/>") {
 				return penguin.sendRaw(`<cross-domain-policy><allow-access-from domain="*" to-ports="*"/></cross-domain-policy>`)
 			} else {
-				const type = data.split("action='")[1].split("'")[0]
-				if (type === "verChk") {
-					return penguin.sendRaw(`<msg t="sys"><body action="apiOK" r="0"></body></msg>`)
-				} else if (type === "rndK") {
-					penguin.randomKey = GameDataEncryptor.generateRandomKey(12)
-					return penguin.sendRaw(`<msg t="sys"><body action="rndK" r="-1"><k>${penguin.randomKey}</k></body></msg>`)
-				} else if (type === "login") {
-					return this.handleLogin(data, penguin)
-				} else {
-					return penguin.disconnect()
+				const type = data.split("n='")[1].split("'")[0]
+
+				switch (type) {
+					case "verChk":
+						if (Number(data.split("v='")[1].split("'")[0]) === 153) return penguin.sendRaw(`<msg t="sys"><body action="apiOK" r="0"></body></msg>`)
+						break;
+
+					case "rndK":
+						penguin.randomKey = GameDataEncryptor.generateRandomKey(12)
+						return penguin.sendRaw(`<msg t="sys"><body action="rndK" r="-1"><k>${penguin.randomKey}</k></body></msg>`)
+						break;
+
+					case "login":
+						if (data.split("z='")[1].split("'")[0] === "w1") return this.handleLogin(data, penguin)
+						break;
+
+					default:
+						return penguin.disconnect()
+						break;
 				}
 			}
-		} else if (data.startsWith("%") && data.endsWith("%")) {
+		} else if (isXT) {
 			return this.handleGame(data, penguin)
 		} else {
 			return penguin.disconnect()

@@ -61,7 +61,7 @@ class Multiplayer {
 			penguin.server.gameManager.gameType = "T"
 		}
 
-		if (penguin.room.id == 802) {
+		if (penguin.room.id === 802) {
 			penguin.sendXt("gz", -1, "0%0%0%0%")
 		}
 

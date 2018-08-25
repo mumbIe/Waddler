@@ -57,6 +57,8 @@ class Pet {
 				if (result.length <= 0) return penguin.sendXt("pg", -1)
 
 				penguin.sendXt("pg", -1, this.joinPuffleData(result, true))
+			}).catch((err) => {
+				console.error(err)
 			})
 		})
 	}
@@ -66,6 +68,8 @@ class Pet {
 			if (result.length <= 0) return penguin.sendXt("pg", -1)
 
 			penguin.sendXt("pgu", -1, this.joinPuffleData(result, true))
+		}).catch((err) => {
+			console.error(err)
 		})
 	}
 
@@ -87,6 +91,8 @@ class Pet {
 			puffle = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("pr", -1, puffle)
+		}).catch((err) => {
+			console.error(err)
 		})
 	}
 
@@ -108,6 +114,8 @@ class Pet {
 			puffle = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("pp", -1, puffle, 1)
+		}).catch((err) => {
+			console.error(err)
 		})
 	}
 
@@ -131,6 +139,8 @@ class Pet {
 			puffle = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("pt", -1, penguin.coins, puffle, treatID)
+		}).catch((err) => {
+			console.error(err)
 		})
 	}
 
@@ -152,6 +162,8 @@ class Pet {
 			puffle = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("pf", -1, penguin.coins, puffle)
+		}).catch((err) => {
+			console.error(err)
 		})
 	}
 
@@ -173,6 +185,8 @@ class Pet {
 			puffle = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("pb", -1, penguin.coins, puffle)
+		}).catch((err) => {
+			console.error(err)
 		})
 	}
 
@@ -187,6 +201,8 @@ class Pet {
 			let puffle = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("ir", -1, puffle)
+		}).catch((err) => {
+			console.error(err)
 		})
 	}
 
@@ -201,6 +217,8 @@ class Pet {
 			let puffle = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("ip", -1, puffle)
+		}).catch((err) => {
+			console.error(err)
 		})
 	}
 
@@ -215,6 +233,8 @@ class Pet {
 			let puffle = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("if", -1, puffle)
+		}).catch((err) => {
+			console.error(err)
 		})
 	}
 
@@ -238,6 +258,8 @@ class Pet {
 			puffle = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("pir", -1, puffleID, puffleX, puffleY)
+		}).catch((err) => {
+			console.error(err)
 		})
 	}
 
@@ -261,6 +283,8 @@ class Pet {
 			puffle = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("pip", -1, puffleID, puffleX, puffleY)
+		}).catch((err) => {
+			console.error(err)
 		})
 	}
 
@@ -286,6 +310,8 @@ class Pet {
 			puffle = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("pm", -1, puffleID, puffleX, puffleY)
+		}).catch((err) => {
+			console.error(err)
 		})
 	}
 
@@ -299,6 +325,8 @@ class Pet {
 			if (result.length <= 0) return
 
 			penguin.room.sendXt("ps", -1, puffleID, puffleFrame)
+		}).catch((err) => {
+			console.error(err)
 		})
 	}
 
@@ -334,6 +362,8 @@ class Pet {
 			let puffleData = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("pw", -1, penguin.id, puffleData)
+		}).catch((err) => {
+			console.error(err)
 		})
 	}
 

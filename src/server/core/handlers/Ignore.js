@@ -13,6 +13,8 @@ class Ignore {
 			})
 
 			penguin.sendXt("gn", -1, ignoreStr)
+		}).catch((err) => {
+			console.error(err)
 		})
 	}
 
@@ -52,6 +54,8 @@ class Ignore {
 
 						this.handleGetIgnored("Your mom", penguin)
 					})
+				}).catch((err) => {
+					console.error(err)
 				})
 			}
 		})
@@ -85,6 +89,8 @@ class Ignore {
 					penguin.database.removeIgnore(penguin.id, toRemove, usernameToRemove).then(() => {
 						penguin.sendXt("rn", -1, toRemove)
 					})
+				}).catch((err) => {
+					console.error(err)
 				})
 			}
 		})

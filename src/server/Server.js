@@ -1,7 +1,6 @@
 "use strict"
 
 const Logger = require("./Logger")
-const config = require("../config")
 
 const Database = require("./core/system/Database")
 const Penguin = require("./core/Penguin")
@@ -13,17 +12,23 @@ const gameManager = require("./core/managers/gameManager")
 const pluginLoader = require("./core/managers/pluginLoader")
 
 class Server {
-	constructor(type) {
-		this.type = type
-		this.port = type === "login" ? config.loginPort : config.worldPort
-		this.maxPenguins = config.maxPenguins || 150
+	constructor(options) {
+		if (!options.id || !options.type || !options.port) {
+			Logger.error("Couldn't locate server configuration")
+			process.exit(1)
+		}
+
+		this.id = options.id
+		this.type = options.type
+		this.port = options.port
+		this.maxPenguins = (options.maxPenguins ? options.maxPenguins : 100)
 
 		this.penguins = []
 
 		this.database = new Database()
 		this.dataHandler = new DataHandler(this)
 
-		if (type !== "login") {
+		if (this.type !== "login") {
 			this.roomManager = new roomManager(this)
 			this.gameManager = new gameManager(this)
 			this.pluginLoader = new pluginLoader()
@@ -54,53 +59,76 @@ class Server {
 			socket.on("data", (data) => {
 				return this.dataHandler.handleData(data.toString().split("\0")[0], penguin)
 			})
+
 			socket.on("close", () => {
 				Logger.info(`A client has disconnected`)
 				return penguin.disconnect()
 			})
+
 			socket.on("error", (error) => {
 				if (error.code === "ETIMEDOUT" || error.code === "ECONNRESET") return
 				Logger.error(error)
 				return penguin.disconnect()
 			})
+
 		}).listen(this.port, () => {
-			Logger.info(`Waddler {${this.type}} listening on port ${this.port}`)
-
-			if (this.type !== "login") return
-
-			if (!this.calculateValidMaxPenguins(this.maxPenguins)) {
-				throw new Error(`Cannot divide ${this.maxPenguins} max penguins over 6 server bars`)
-				process.exit(1)
-			}
-
-			Logger.info(`Max amount of penguins: ${this.maxPenguins}`)
+			Logger.info(`Waddler {${this.type}} listening on port ${this.port} by ID ${this.id}`)
 		})
 	}
 
-	calculateValidMaxPenguins() {
-		const playersPerBar = this.maxPenguins / 6
-
-		if (playersPerBar.toString().indexOf(".") === -1) return true
-
-		return false
-	}
-
-	getServerBars() {
+	calculateWorldPopulation(capacity) {
 		const population = this.penguins.length
 
-		if (population <= 25) {
-			return 1
-		} else if (population > 25 && population <= 50) {
-			return 2
-		} else if (population > 50 && population <= 75) {
-			return 3
-		} else if (population > 75 && population <= 100) {
-			return 4
-		} else if (population > 100 && population <= 125) {
-			return 5
-		} else if (population > 125 && population <= 150) {
-			return 6
+		if (population < 10) return 0
+		if (population >= capacity) return 7
+
+		const threshold = Math.round((capacity + 100) / 7)
+
+		for (let i = 0; i < 7; i++) {
+			if (population <= (threshold * i)) return i
 		}
+
+		return 7
+	}
+
+	getServers() {
+		const servers = require("../config").Server
+		let serverArr = []
+
+		for (const id of Object.keys(servers)) {
+			if (servers[id].type == "world") {
+				const server = [id, servers[id].name, servers[id].host, servers[id].port]
+				serverArr.push(server.join("|"))
+			}
+		}
+
+		return serverArr.join("%")
+	}
+
+	getServerPopulation() {
+		const servers = require("../config").Server
+		let populationArr = []
+
+		for (const id of Object.keys(servers)) {
+			if (servers[id].type == "world") {
+				populationArr.push([id, this.calculateWorldPopulation(servers[id].maxPenguins)].join(","))
+			}
+		}
+
+		return populationArr
+	}
+
+	decodeCrumb(crumb) {
+		const msgpuck = require("msgpuck")
+		const Decoder = new msgpuck.Decoder()
+
+		return new Promise((resolve, reject) => {
+			require("fs").readFile(`${__dirname}/crumbs/${crumb}.bin`, (err, data) => {
+				if (err) return reject(err)
+
+				return resolve(Decoder.decode(data))
+			})
+		})
 	}
 
 	getPenguinById(id) {

@@ -45,6 +45,8 @@ class Clothing {
 			penguin.inventory = inventory
 
 			penguin.sendXt("gi", -1, inventory.join("%"))
+		}).catch((err) => {
+			console.error(err)
 		})
 	}
 }

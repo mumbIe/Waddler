@@ -47,6 +47,6 @@ A rich-featured open source Club Penguin emulator, written in Node.js.
 * In Waddler, go to `/src/` and open config.json and enter your MySQL details
 * Go back to the index folder of Waddler where `package.json` is located
 * Open Command Prompt and enter `npm install`
-* In the same folder where `package.json` is located, enter on Command Prompt `node runLogin.js`
-* Open another Command Prompt and browse to the folder where `package.json` is located using CD and enter on Command Prompt: `node runGame.js`
+* In the same folder where `package.json` is located, enter on Command Prompt `node run.js 1`
+* Open another Command Prompt and browse to the folder where `package.json` is located using CD and enter on Command Prompt: `node run.js 100`
 * Make sure MySQL, the register and your webserver are running

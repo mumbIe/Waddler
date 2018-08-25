@@ -12,7 +12,6 @@ class Player {
 		penguin.x = x
 		penguin.y = y
 
-		if (penguin.coinDig > 5) return penguin.sendError(800, true)
 		if (penguin.coinDig !== 0) penguin.coinDig = 0
 
 		penguin.room.sendXt("sp", -1, penguin.id, x, y)
@@ -111,8 +110,8 @@ class Player {
 					result.photo
 				]
 				penguin.sendXt("gp", -1, playerInfo.join("|") + "|")
-			}).catch(() => {
-				return penguin.disconnect()
+			}).catch((err) => {
+				console.error(err)
 			})
 		})
 	}
