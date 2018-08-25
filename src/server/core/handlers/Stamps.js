@@ -13,7 +13,7 @@ class Stamps {
 
 			let stampStr = ""
 
-			penguin.database.getStamps(penguinID).then((result) => {
+			penguin.database.getColumn(penguinID, "stampID", "stamps").then((result) => {
 				if (result.length <= 0) return penguin.sendXt("gps", -1, penguinID, "")
 
 				result.forEach(row => {
@@ -39,21 +39,46 @@ class Stamps {
 			const items = require("../../crumbs/items")
 			const pins = require("../../crumbs/pins")
 
-			penguin.database.getInventoryByID(penguinID).then((result) => {
-				result.forEach(row => {
-					if (items[row.itemID].type === "pin") {
-						if (pins[row.itemID] !== undefined) {
-							pinStr += `${row.itemID}|${pins[row.itemID].unix}|1%`
-						} else {
-							pinStr += `${row.itemID}|${sp.getTime()}|1%`
+			const playerObj = penguin.server.getPenguinById(penguinID)
+
+			if (playerObj) {
+				if (playerObj.inventory.length !== 0) {
+
+					playerObj.inventory.forEach(item => {
+						if (items[item].type === "pin") {
+							if (pins[item] !== undefined) {
+								pinStr += `${item}|${pins[item].unix}|1%`
+							} else {
+								pinStr += `${item}|${sp.getTime()}|1%`
+							}
 						}
-					}
+					})
+
+					if (pinStr.length === 0) return playerObj.sendXt("qpp", -1, "")
+
+					playerObj.sendXt("qpp", -1, `${pinStr.slice(0, -1)}`)
+				} else {
+					return playerObj.sendXt("qpp", -1, "")
+				}
+			} else {
+				penguin.database.getColumn(penguinID, "itemID", "inventory").then((result) => {
+					if (result.length <= 0) return penguin.sendXt("qpp", -1, "")
+
+					result.forEach(row => {
+						if (items[row.itemID].type === "pin") {
+							if (pins[row.itemID] !== undefined) {
+								pinStr += `${row.itemID}|${pins[row.itemID].unix}|1%`
+							} else {
+								pinStr += `${row.itemID}|${sp.getTime()}|1%`
+							}
+						}
+					})
+
+					if (pinStr.length === 0) return penguin.sendXt("qpp", -1, "")
+
+					penguin.sendXt("qpp", -1, `${pinStr.slice(0, -1)}`)
 				})
-
-				if (pinStr.length === 0) return penguin.sendXt("qpp", -1, "")
-
-				penguin.sendXt("qpp", -1, `|${pinStr.slice(0, -1)}`)
-			})
+			}
 		})
 	}
 
@@ -69,17 +94,36 @@ class Stamps {
 
 			const awards = require("../../crumbs/awards")
 
-			penguin.database.getInventoryByID(penguinID).then((result) => {
-				result.forEach(row => {
-					if (awards[row.itemID]) {
-						awardStr += `${row.itemID}|${awards[row.itemID].unix}|1%`
-					}
+			const playerObj = penguin.server.getPenguinById(penguinID)
+
+			if (playerObj) {
+				if (playerObj.inventory.length !== 0) {
+
+					playerObj.inventory.forEach(award => {
+						if (awards[award]) awardStr += `${award}|${awards[award].unix}|1%`
+					})
+
+					if (awardStr.length === 0) return playerObj.sendXt("qpa", -1, "")
+
+					playerObj.sendXt("qpa", -1, `${awardStr.slice(0, -1)}`)
+				} else {
+					return playerObj.sendXt("qpa", -1, "")
+				}
+			} else {
+				penguin.database.getColumn(penguinID, "itemID", "inventory").then((result) => {
+					if (result.length <= 0) return penguin.sendXt("qpa", -1, "")
+
+					result.forEach(row => {
+						if (awards[row.itemID]) {
+							awardStr += `${row.itemID}|${awards[row.itemID].unix}|1%`
+						}
+					})
+
+					if (awardStr.length === 0) return penguin.sendXt("qpa", -1, "")
+
+					penguin.sendXt("qpa", -1, `${awardStr.slice(0, -1)}`)
 				})
-
-				if (awardStr.length === 0) return penguin.sendXt("qpa", -1, "")
-
-				penguin.sendXt("qpa", -1, `|${awardStr.slice(0, -1)}`)
-			})
+			}
 		})
 	}
 

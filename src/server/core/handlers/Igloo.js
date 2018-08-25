@@ -29,7 +29,7 @@ class Igloo {
 
 			if (penguin.id !== penguinID) return penguin.disconnect()
 
-			penguin.database.getActiveIgloo(penguin.id).then((result) => {
+			penguin.getColumn(penguin.id, "*", "igloo").then((result) => {
 				const iglooStr = `${result[0].type}%${result[0].music}%${result[0].floor}%${result[0].furniture}%${result[0].locked}`
 
 				penguin.sendXt("gm", -1, penguin.id, iglooStr)

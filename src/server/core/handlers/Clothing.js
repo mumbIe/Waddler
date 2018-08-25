@@ -17,7 +17,6 @@ class Clothing {
 			"upp": "photo"
 		}
 
-		if (type.length !== 3) return penguin.disconnect()
 		if (isNaN(item)) return penguin.disconnect()
 		if (!types[type]) return penguin.disconnect()
 

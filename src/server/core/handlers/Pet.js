@@ -53,7 +53,7 @@ class Pet {
 		penguin.doesIDExist(penguinID).then((exists) => {
 			if (!exists) return
 
-			penguin.database.getPuffles(penguinID).then((result) => {
+			penguin.database.getColumn(penguinID, "*", "puffles").then((result) => {
 				if (result.length <= 0) return penguin.sendXt("pg", -1)
 
 				penguin.sendXt("pg", -1, this.joinPuffleData(result, true))
@@ -62,7 +62,7 @@ class Pet {
 	}
 
 	static handleGetPuffles(data, penguin) {
-		penguin.database.getPuffles(penguin.id).then((result) => {
+		penguin.database.getColumn(penguin.id, "*", "puffles").then((result) => {
 			if (result.length <= 0) return penguin.sendXt("pg", -1)
 
 			penguin.sendXt("pgu", -1, this.joinPuffleData(result, true))
@@ -343,7 +343,7 @@ class Pet {
 
 		if (isNaN(puffleType)) return
 
-		penguin.database.getPuffles(penguin.id).then((result) => {
+		penguin.database.getColumn(penguin.id, "*", "puffles").then((result) => {
 			if (result.length >= 20) return penguin.sendError(440)
 			if (penguin.coins < 800) return penguin.sendError(401)
 

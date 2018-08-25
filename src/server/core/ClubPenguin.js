@@ -68,7 +68,7 @@ class ClubPenguin {
 
 		this.removeCoins(cost)
 
-		this.database.alreadyOwnsIgloo(this.id).then((result) => {
+		this.getColumn("igloos").then((result) => {
 			let igloos = []
 
 			for (const i of result[0].igloos.split("|")) igloos.push(parseInt(i))

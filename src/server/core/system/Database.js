@@ -26,16 +26,6 @@ class Database {
 
 		return this.knex("penguins").first("*").where(type, player)
 	}
-	getUsernameByID(ID) {
-		return this.knex("penguins").select("username").where({
-			ID
-		})
-	}
-	getInventoryByID(ID) {
-		return this.knex("inventory").select("itemID").where({
-			ID
-		})
-	}
 	updateColumn(player, column, value, table) {
 		const type = isNaN(player) ? "username" : "ID"
 
@@ -75,20 +65,10 @@ class Database {
 			ID
 		})
 	}
-	getActiveIgloo(ID) {
-		return this.knex("igloo").select("*").where({
-			ID
-		})
-	}
 	addIgloo(ID, igloo) {
 		if (igloo.includes("'")) return
 		return this.knex.raw('UPDATE `penguins` SET `igloos` =' + `concat(igloos, "|", ${igloo})` + 'WHERE `ID` = ?', [ID]).then(() => {}).catch((err) => {
 			Logger.error(err)
-		})
-	}
-	alreadyOwnsIgloo(ID) {
-		return this.knex("penguins").select("igloos").where({
-			ID
 		})
 	}
 
@@ -132,11 +112,6 @@ class Database {
 		})
 	}
 
-	getStamps(ID) {
-		return this.knex("stamps").select("stampID").where({
-			ID
-		})
-	}
 	insertStamp(ID, stampID) {
 		return this.knex("stamps").insert({
 			ID: ID,
@@ -154,11 +129,6 @@ class Database {
 		return this.knex("puffles").select("*").where({
 			ID: ID,
 			puffleName: puffleName
-		})
-	}
-	getPuffles(ID) {
-		return this.knex("puffles").select("*").where({
-			ID
 		})
 	}
 	adoptPuffle(ID, puffleName, puffleType, stats) {

@@ -1,6 +1,6 @@
 {
 	"name": "waddler",
-	"version": "1.5.0",
+	"version": "1.5.1",
 	"description": "A rich-featured open source Club Penguin emulator, written in Node.js.",
 	"keywords": [
 		"club",

@@ -8,8 +8,8 @@ class Ignore {
 			if (result.length <= 0) return penguin.sendXt("gn", -1, "")
 
 			result.forEach(row => {
-				penguin.ignored.push(`${row.ignoredID}|${row.ignored.push}`)
-				ignoreStr += `${row.ignoredID}|${row.ignored.push}`
+				penguin.ignored.push(`${row.ignoredID}|${row.ignoredUsername}`)
+				ignoreStr += `${row.ignoredID}|${row.ignoredUsername}`
 			})
 
 			penguin.sendXt("gn", -1, ignoreStr)
@@ -29,22 +29,31 @@ class Ignore {
 					buddy = buddy.split("|")
 					if (Number(buddy[0]) === toIgnore) return
 				})
-			}
-			if (penguin.ignored.length !== 0) {
 				penguin.ignored.forEach(ignore => {
 					ignore = ignore.split("|")
 					if (Number(ignore[0]) === toIgnore) return
 				})
 			}
 
-			penguin.database.getUsernameByID(toIgnore).then((result) => {
-				let usernameToIgnore = result[0].username
+			const playerObj = penguin.server.getPenguinById(toIgnore)
 
-				penguin.database.addIgnore(penguin.id, toIgnore, usernameToIgnore).then((result) => {
+			if (playerObj) {
+				penguin.database.addIgnore(penguin.id, toIgnore, playerObj.username).then(() => {
 					penguin.sendXt("an", -1, toIgnore)
+
 					this.handleGetIgnored("Your mom", penguin)
 				})
-			})
+			} else {
+				penguin.database.getColumn(toIgnore, "username").then((result) => {
+					const usernameToIgnore = result[0].username
+
+					penguin.database.addIgnore(penguin.id, toIgnore, usernameToIgnore).then(() => {
+						penguin.sendXt("an", -1, toIgnore)
+
+						this.handleGetIgnored("Your mom", penguin)
+					})
+				})
+			}
 		})
 	}
 
@@ -63,13 +72,21 @@ class Ignore {
 				if (Number(ignore[0]) !== toRemove) return
 			})
 
-			penguin.database.getUsernameByID(toRemove).then((result) => {
-				let usernameToRemove = result[0].username
+			const playerObj = penguin.server.getPenguinById(toRemove)
 
-				penguin.database.removeIgnore(penguin.id, toRemove, usernameToRemove).then((result) => {
+			if (playerObj) {
+				penguin.database.removeIgnore(penguin.id, toRemove, playerObj.username).then(() => {
 					penguin.sendXt("rn", -1, toRemove)
 				})
-			})
+			} else {
+				penguin.database.getColumn(toRemove, "username").then((result) => {
+					const usernameToRemove = result[0].username
+
+					penguin.database.removeIgnore(penguin.id, toRemove, usernameToRemove).then(() => {
+						penguin.sendXt("rn", -1, toRemove)
+					})
+				})
+			}
 		})
 	}
 }

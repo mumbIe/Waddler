@@ -1,10 +1,8 @@
 "use strict"
 
-const items = require("./items")
-
 class PatchedItems {
 	static containsBaitItem(itemID) {
-		return items.includes(itemID)
+		return require("./items").includes(itemID)
 	}
 }
 

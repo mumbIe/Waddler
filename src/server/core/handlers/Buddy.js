@@ -42,21 +42,27 @@ class Buddy {
 
 			if (!penguin.requests.includes(toAccept)) return
 
-			penguin.database.getUsernameByID(toAccept).then((result) => {
-				let usernameToAccept = result[0].username
+			const playerObj = penguin.server.getPenguinById(toAccept)
 
-				penguin.database.addBuddy(penguin.id, toAccept, usernameToAccept).then(() => {
+			if (playerObj) {
+				penguin.database.addBuddy(penguin.id, toAccept, playerObj.username).then(() => {
 					penguin.database.addBuddy(toAccept, penguin.id, penguin.username).then(() => {
-						const acceptObj = penguin.server.getPenguinById(toAccept)
-
-						if (acceptObj) acceptObj.sendXt("ba", -1, penguin.id, penguin.username)
-
-						penguin.sendXt("ba", -1, toAccept, usernameToAccept)
-
+						playerObj.sendXt("ba", -1, penguin.id, penguin.username)
 						penguin.requests.splice(penguin.requests.indexOf(toAccept), 1)
 					})
 				})
-			})
+			} else {
+				penguin.database.getColumn(toAccept, "username").then((result) => {
+					const usernameToAccept = result[0].username
+
+					penguin.database.addBuddy(penguin.id, toAccept, usernameToAccept).then(() => {
+						penguin.database.addBuddy(toAccept, penguin.id, penguin.username).then(() => {
+							penguin.sendXt("ba", -1, toAccept, usernameToAccept)
+							penguin.requests.splice(penguin.requests.indexOf(toAccept), 1)
+						})
+					})
+				})
+			}
 		})
 	}
 
@@ -78,19 +84,19 @@ class Buddy {
 				})
 			}
 
-			const requestObj = penguin.server.getPenguinById(toRequest)
+			const playerObj = penguin.server.getPenguinById(toRequest)
 
-			if (requestObj) {
-				if (requestObj.buddies.length >= 500) return requestObj.sendError(901)
-				if (requestObj.buddies.length !== 0) {
-					requestObj.buddies.forEach(buddy => {
+			if (playerObj) {
+				if (playerObj.buddies.length >= 500) return playerObj.sendError(901)
+				if (playerObj.buddies.length !== 0) {
+					playerObj.buddies.forEach(buddy => {
 						buddy = buddy.split("|")
 						if (Number(buddy[0]) === penguin.id) return
 					})
 				}
 
-				requestObj.requests.push(penguin.id)
-				requestObj.sendXt("br", -1, penguin.id, penguin.username)
+				playerObj.requests.push(penguin.id)
+				playerObj.sendXt("br", -1, penguin.id, penguin.username)
 			}
 		})
 	}
@@ -105,21 +111,25 @@ class Buddy {
 
 			if (penguin.buddies.length === 0) return
 
-			penguin.database.getUsernameByID(toRemove).then((result) => {
-				const usernameToRemove = result[0].username
+			const playerObj = penguin.server.getPenguinById(toRemove)
 
-				penguin.database.removeBuddy(penguin.id, toRemove, usernameToRemove).then(() => {
+			if (playerObj) {
+				penguin.database.removeBuddy(penguin.id, toRemove, playerObj.username).then(() => {
 					penguin.database.removeBuddy(toRemove, penguin.id, penguin.username).then(() => {
-						const removeObj = penguin.server.getPenguinById(toRemove)
-
-						if (removeObj) removeObj.sendXt("rb", -1, penguin.id, penguin.username)
-
-						penguin.sendXt("rb", -1, toRemove, usernameToRemove)
+						playerObj.sendXt("rb", -1, penguin.id, penguin.username)
 					})
-				}).catch(() => {
-					penguin.disconnect()
 				})
-			})
+			} else {
+				penguin.database.getColumn(toRemove, "username").then((result) => {
+					const usernameToRemove = result[0].username
+
+					penguin.database.removeBuddy(penguin.id, toRemove, usernameToRemove).then(() => {
+						penguin.database.removeBuddy(toRemove, penguin.id, penguin.username).then(() => {
+							penguin.sendXt("rb", -1, toRemove, usernameToRemove)
+						})
+					})
+				})
+			}
 		})
 	}
 
@@ -131,9 +141,9 @@ class Buddy {
 		penguin.doesIDExist(toFind).then((exists) => {
 			if (!exists) return
 
-			const findObj = penguin.server.getPenguinById(toFind)
+			const playerObj = penguin.server.getPenguinById(toFind)
 
-			if (findObj) penguin.sendXt("bf", -1, findObj.room.id)
+			if (playerObj) penguin.sendXt("bf", -1, playerObj.room.id)
 		})
 	}
 }

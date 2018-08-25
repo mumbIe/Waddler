@@ -13,11 +13,11 @@ class Moderation {
 
 			penguin.database.updateColumn(toBan, "banned", 1)
 
-			const player = penguin.server.getPenguinById(toBan)
+			const playerObj = penguin.server.getPenguinById(toBan)
 
-			if (player) {
-				player.sendXt("b", -1)
-				player.disconnect()
+			if (playerObj) {
+				playerObj.sendXt("b", -1)
+				playerObj.disconnect()
 			}
 		})
 	}
@@ -32,9 +32,9 @@ class Moderation {
 		penguin.doesIDExist(toKick).then((exists) => {
 			if (!exists) return
 
-			const player = penguin.server.getPenguinById(toKick)
+			const playerObj = penguin.server.getPenguinById(toKick)
 
-			if (player) player.sendError(5, true)
+			if (playerObj) playerObj.sendError(5, true)
 		})
 	}
 
@@ -48,9 +48,9 @@ class Moderation {
 		penguin.doesIDExist(toMute).then((exists) => {
 			if (!exists) return
 
-			let player = penguin.server.getPenguinById(toMute)
+			let playerObj = penguin.server.getPenguinById(toMute)
 
-			if (player) player.muted = !player.muted
+			if (playerObj) playerObj.muted = !playerObj.muted
 		})
 	}
 }

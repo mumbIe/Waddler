@@ -11,7 +11,7 @@ class Censor {
 
 				while (i < s.length) {
 					asterisks += "*"
-					i++
+					i++;
 				}
 
 				return asterisks
