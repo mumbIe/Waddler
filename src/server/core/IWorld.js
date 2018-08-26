@@ -1,78 +1,23 @@
 "use strict"
 
-const Clothing = require("./handlers/Clothing")
 const Navigation = require("./handlers/Navigation")
+
 const Player = require("./handlers/Player")
-
-const Toy = require("./handlers/Toy")
 const Igloo = require("./handlers/Igloo")
-const Moderation = require("./handlers/Moderation")
 
+const Moderation = require("./handlers/Moderation")
 const Pet = require("./handlers/Pet")
+
 const Ignore = require("./handlers/Ignore")
 const Buddy = require("./handlers/Buddy")
 
 const Stamps = require("./handlers/Stamps")
 const Mail = require("./handlers/Mail")
+
 const Multiplayer = require("./handlers/Multiplayer")
 
 const xtHandlers = {
 	"s": {
-		"s#upc": {
-			func: "handleUpdateClothing",
-			file: Clothing,
-			throttle: true
-		},
-		"s#uph": {
-			func: "handleUpdateClothing",
-			file: Clothing,
-			throttle: false
-		},
-		"s#upf": {
-			func: "handleUpdateClothing",
-			file: Clothing,
-			throttle: false
-		},
-		"s#upn": {
-			func: "handleUpdateClothing",
-			file: Clothing,
-			throttle: false
-		},
-		"s#upb": {
-			func: "handleUpdateClothing",
-			file: Clothing,
-			throttle: false
-		},
-		"s#upa": {
-			func: "handleUpdateClothing",
-			file: Clothing,
-			throttle: false
-		},
-		"s#upe": {
-			func: "handleUpdateClothing",
-			file: Clothing,
-			throttle: false
-		},
-		"s#upl": {
-			func: "handleUpdateClothing",
-			file: Clothing,
-			throttle: false
-		},
-		"s#upp": {
-			func: "handleUpdateClothing",
-			file: Clothing,
-			throttle: false
-		},
-		"i#ai": {
-			func: "handleAddItem",
-			file: Clothing,
-			throttle: true
-		},
-		"i#gi": {
-			func: "handleGetInventory",
-			file: Clothing,
-			throttle: true
-		},
 		"j#js": {
 			func: "handleJoinServer",
 			file: Navigation,
@@ -91,6 +36,61 @@ const xtHandlers = {
 		"j#grs": {
 			func: "handleRefreshRoom",
 			file: Navigation,
+			throttle: true
+		},
+		"s#upc": {
+			func: "handleUpdateClothing",
+			file: Player,
+			throttle: true
+		},
+		"s#uph": {
+			func: "handleUpdateClothing",
+			file: Player,
+			throttle: false
+		},
+		"s#upf": {
+			func: "handleUpdateClothing",
+			file: Player,
+			throttle: false
+		},
+		"s#upn": {
+			func: "handleUpdateClothing",
+			file: Player,
+			throttle: false
+		},
+		"s#upb": {
+			func: "handleUpdateClothing",
+			file: Player,
+			throttle: false
+		},
+		"s#upa": {
+			func: "handleUpdateClothing",
+			file: Player,
+			throttle: false
+		},
+		"s#upe": {
+			func: "handleUpdateClothing",
+			file: Player,
+			throttle: false
+		},
+		"s#upl": {
+			func: "handleUpdateClothing",
+			file: Player,
+			throttle: false
+		},
+		"s#upp": {
+			func: "handleUpdateClothing",
+			file: Player,
+			throttle: false
+		},
+		"i#ai": {
+			func: "handleAddItem",
+			file: Player,
+			throttle: true
+		},
+		"i#gi": {
+			func: "handleGetInventory",
+			file: Player,
 			throttle: true
 		},
 		"u#sp": {
@@ -175,12 +175,12 @@ const xtHandlers = {
 		},
 		"t#at": {
 			func: "handleOpenPlayerBook",
-			file: Toy,
+			file: Player,
 			throttle: true
 		},
 		"t#rt": {
 			func: "handleClosePlayerBook",
-			file: Toy,
+			file: Player,
 			throttle: true
 		},
 		"g#af": {

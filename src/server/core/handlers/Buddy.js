@@ -4,7 +4,7 @@ class Buddy {
 	static handleGetBuddies(data, penguin) {
 		let buddyStr = ""
 
-		penguin.database.getBuddies(penguin.id).then((result) => {
+		penguin.knex("buddies").select("buddyID", "buddyUsername").where("ID", penguin.id).then((result) => {
 			if (result.length <= 0) return penguin.sendXt("gb", -1, "")
 
 			result.forEach(row => {
@@ -35,8 +35,7 @@ class Buddy {
 
 			if (penguin.buddies.length !== 0) {
 				penguin.buddies.forEach(buddy => {
-					buddy = buddy.split("|")
-					if (Number(buddy[0]) === toAccept) return
+					if (Number(buddy.split("|")[0]) === toAccept) return
 				})
 			}
 
@@ -53,13 +52,17 @@ class Buddy {
 				})
 			}
 
-			penguin.database.addBuddy(penguin.id, toAccept, usernameToAccept).then(() => {
-				penguin.database.addBuddy(toAccept, penguin.id, penguin.username).then(() => {
-					if (playerObj) {
-						playerObj.sendXt("ba", -1, penguin.id, penguin.username)
-					} else {
-						penguin.sendXt("ba", -1, toAccept, usernameToAccept)
-					}
+			penguin.knex("buddies").insert({
+				ID: penguin.id,
+				buddyID: toAccept,
+				buddyUsername: usernameToAccept
+			}).then(() => {
+				penguin.knex("buddies").insert({
+					ID: toAccept,
+					buddyID: penguin.id,
+					buddyUsername: penguin.username
+				}).then(() => {
+					playerObj ? playerObj.sendXt("ba", -1, penguin.id, penguin.username) : penguin.sendXt("ba", -1, toAccept, usernameToAccept)
 
 					penguin.requests.splice(penguin.requests.indexOf(toAccept), 1)
 				})
@@ -80,8 +83,7 @@ class Buddy {
 
 			if (penguin.buddies.length !== 0) {
 				penguin.buddies.forEach(buddy => {
-					buddy = buddy.split("|")
-					if (Number(buddy[0]) === toRequest) return
+					if (Number(buddy.split("|")[0]) === toRequest) return
 				})
 			}
 
@@ -91,8 +93,7 @@ class Buddy {
 				if (playerObj.buddies.length >= 500) return playerObj.sendError(901)
 				if (playerObj.buddies.length !== 0) {
 					playerObj.buddies.forEach(buddy => {
-						buddy = buddy.split("|")
-						if (Number(buddy[0]) === penguin.id) return
+						if (Number(buddy.split("|")[0]) === penguin.id) return
 					})
 				}
 
@@ -123,13 +124,17 @@ class Buddy {
 				})
 			}
 
-			penguin.database.removeBuddy(penguin.id, toRemove, usernameToRemove).then(() => {
-				penguin.database.removeBuddy(toRemove, penguin.id, penguin.username).then(() => {
-					if (playerObj) {
-						playerObj.sendXt("rb", -1, penguin.id, penguin.username)
-					} else {
-						penguin.sendXt("rb", -1, toRemove, usernameToRemove)
-					}
+			penguin.knex("buddies").del().where({
+				ID: penguin.id,
+				buddyID: toRemove,
+				buddyUsername: usernameToRemove
+			}).then(() => {
+				penguin.knex("buddies").del().where({
+					ID: toRemove,
+					buddyID: penguin.id,
+					buddyUsername: penguin.username
+				}).then(() => {
+					playerObj ? playerObj.sendXt("rb", -1, penguin.id, penguin.username) : penguin.sendXt("rb", -1, toRemove, usernameToRemove)
 				})
 			})
 		})

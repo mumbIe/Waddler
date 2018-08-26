@@ -110,41 +110,28 @@ class DataHandler {
 		xt_attributes.file[xt_attributes.func](data, penguin)
 	}
 
-	handleData(data, penguin) {
-		Logger.incoming(data)
-
-		const isXML = data.charAt(0) === "<" ? true : false
-		const isXT = data.charAt(0) === "%" ? true : false
-
-		if (isXML) {
-			if (data === "<policy-file-request/>") {
-				return penguin.sendRaw(`<cross-domain-policy><allow-access-from domain="*" to-ports="*"/></cross-domain-policy>`)
-			} else {
-				const type = data.split("n='")[1].split("'")[0]
-
-				switch (type) {
-					case "verChk":
-						if (Number(data.split("v='")[1].split("'")[0]) === 153) return penguin.sendRaw(`<msg t="sys"><body action="apiOK" r="0"></body></msg>`)
-						break;
-
-					case "rndK":
-						penguin.randomKey = GameDataEncryptor.generateRandomKey(12)
-						return penguin.sendRaw(`<msg t="sys"><body action="rndK" r="-1"><k>${penguin.randomKey}</k></body></msg>`)
-						break;
-
-					case "login":
-						if (data.split("z='")[1].split("'")[0] === "w1") return this.handleLogin(data, penguin)
-						break;
-
-					default:
-						return penguin.disconnect()
-						break;
-				}
-			}
-		} else if (isXT) {
-			return this.handleGame(data, penguin)
+	handleXML(data, penguin) {
+		if (data === "<policy-file-request/>") {
+			return penguin.sendRaw(`<cross-domain-policy><allow-access-from domain="*" to-ports="*"/></cross-domain-policy>`)
 		} else {
-			return penguin.disconnect()
+			const type = data.split("n='")[1].split("'")[0]
+
+			if (!["verChk", "rndK", "login"].includes(type)) return penguin.disconnect()
+
+			if (type === "verChk") {
+				if (Number(data.split("v='")[1].split("'")[0]) !== 153) return penguin.disconnect()
+				return penguin.sendRaw(`<msg t="sys"><body action="apiOK" r="0"></body></msg>`)
+			}
+
+			if (type === "rndK") {
+				penguin.randomKey = GameDataEncryptor.generateRandomKey(12)
+				return penguin.sendRaw(`<msg t="sys"><body action="rndK" r="-1"><k>${penguin.randomKey}</k></body></msg>`)
+			}
+
+			if (type === "login") {
+				if (data.split("z='")[1].split("'")[0] !== "w1") return penguin.disconnect()
+				return this.handleLogin(data, penguin)
+			}
 		}
 	}
 }

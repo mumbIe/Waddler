@@ -14,6 +14,8 @@ class Penguin extends ClubPenguin {
 		this.ipAddr = socket.remoteAddress.split(":").pop()
 
 		this.database = server.database
+		this.knex = server.database.knex
+
 		this.roomHandler = server.roomHandler
 	}
 

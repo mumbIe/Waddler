@@ -6,7 +6,10 @@ class Pet {
 	static handleUpdatePuffle(type, value, puffleID, penguin) {
 		if (isNaN(puffleID) || isNaN(value)) return
 
-		penguin.database.getPuffle(penguin.id, puffleID).then((result) => {
+		penguin.knex("puffles").select("*").where({
+			ID: penguin.id,
+			puffleID: puffleID
+		}).then((result) => {
 			if (result.length <= 0) return
 
 			penguin.updateColumn(type, value, "puffles")
@@ -61,7 +64,10 @@ class Pet {
 
 		if (isNaN(puffleID)) return
 
-		penguin.database.getPuffle(penguin.id, puffleID).then((result) => {
+		penguin.knex("puffles").select("*").where({
+			ID: penguin.id,
+			puffleID: puffleID
+		}).then((result) => {
 			if (result.length <= 0) return
 
 			let puffle = this.joinPuffleData(result, true)
@@ -82,7 +88,10 @@ class Pet {
 
 		if (isNaN(puffleID)) return
 
-		penguin.database.getPuffle(penguin.id, puffleID).then((result) => {
+		penguin.knex("puffles").select("*").where({
+			ID: penguin.id,
+			puffleID: puffleID
+		}).then((result) => {
 			if (result.length <= 0) return
 
 			let puffle = this.joinPuffleData(result, true)
@@ -104,7 +113,10 @@ class Pet {
 
 		if (isNaN(puffleID) || isNaN(treatID)) return
 
-		penguin.database.getPuffle(penguin.id, puffleID).then((result) => {
+		penguin.knex("puffles").select("*").where({
+			ID: penguin.id,
+			puffleID: puffleID
+		}).then((result) => {
 			if (result.length <= 0) return
 			if (![1, 2].includes(treatID)) return
 
@@ -126,7 +138,10 @@ class Pet {
 
 		if (isNaN(puffleID)) return
 
-		penguin.database.getPuffle(penguin.id, puffleID).then((result) => {
+		penguin.knex("puffles").select("*").where({
+			ID: penguin.id,
+			puffleID: puffleID
+		}).then((result) => {
 			if (result.length <= 0) return
 
 			let puffle = this.joinPuffleData(result, true)
@@ -147,7 +162,10 @@ class Pet {
 
 		if (isNaN(puffleID)) return
 
-		penguin.database.getPuffle(penguin.id, puffleID).then((result) => {
+		penguin.knex("puffles").select("*").where({
+			ID: penguin.id,
+			puffleID: puffleID
+		}).then((result) => {
 			if (result.length <= 0) return
 
 			let puffle = this.joinPuffleData(result, true)
@@ -168,7 +186,10 @@ class Pet {
 
 		if (isNaN(puffleID)) return
 
-		penguin.database.getPuffle(penguin.id, puffleID).then((result) => {
+		penguin.knex("puffles").select("*").where({
+			ID: penguin.id,
+			puffleID: puffleID
+		}).then((result) => {
 			if (result.length <= 0) return
 
 			let puffle = this.joinPuffleData(result, true)
@@ -182,7 +203,10 @@ class Pet {
 
 		if (isNaN(puffleID)) return
 
-		penguin.database.getPuffle(penguin.id, puffleID).then((result) => {
+		penguin.knex("puffles").select("*").where({
+			ID: penguin.id,
+			puffleID: puffleID
+		}).then((result) => {
 			if (result.length <= 0) return
 
 			let puffle = this.joinPuffleData(result, true)
@@ -196,7 +220,10 @@ class Pet {
 
 		if (isNaN(puffleID)) return
 
-		penguin.database.getPuffle(penguin.id, puffleID).then((result) => {
+		penguin.knex("puffles").select("*").where({
+			ID: penguin.id,
+			puffleID: puffleID
+		}).then((result) => {
 			if (result.length <= 0) return
 
 			let puffle = this.joinPuffleData(result, true)
@@ -212,7 +239,10 @@ class Pet {
 
 		if (isNaN(puffleID) || isNaN(puffleX) || isNaN(puffleY)) return
 
-		penguin.database.getPuffle(penguin.id, puffleID).then((result) => {
+		penguin.knex("puffles").select("*").where({
+			ID: penguin.id,
+			puffleID: puffleID
+		}).then((result) => {
 			if (result.length <= 0) return
 
 			let puffle = this.joinPuffleData(result, true)
@@ -235,7 +265,10 @@ class Pet {
 
 		if (isNaN(puffleID) || isNaN(puffleX) || isNaN(puffleY)) return
 
-		penguin.database.getPuffle(penguin.id, puffleID).then((result) => {
+		penguin.knex("puffles").select("*").where({
+			ID: penguin.id,
+			puffleID: puffleID
+		}).then((result) => {
 			if (result.length <= 0) return
 
 			let puffle = this.joinPuffleData(result, true)
@@ -258,7 +291,10 @@ class Pet {
 
 		if (isNaN(puffleID) || isNaN(puffleX) || isNaN(puffleY)) return
 
-		penguin.database.getPuffle(penguin.id, puffleID).then((result) => {
+		penguin.knex("puffles").select("*").where({
+			ID: penguin.id,
+			puffleID: puffleID
+		}).then((result) => {
 			if (result.length <= 0) return
 
 			let puffle = this.joinPuffleData(result, true)
@@ -279,7 +315,10 @@ class Pet {
 
 		if (isNaN(puffleID) || isNaN(puffleFrame)) return
 
-		penguin.database.getPuffle(penguin.id, puffleID).then((result) => {
+		penguin.knex("puffles").select("*").where({
+			ID: penguin.id,
+			puffleID: puffleID
+		}).then((result) => {
 			if (result.length <= 0) return
 
 			penguin.room.sendXt("ps", -1, puffleID, puffleFrame)
@@ -291,7 +330,10 @@ class Pet {
 
 		if (isNaN(puffleID)) return
 
-		penguin.database.getPuffle(penguin.id, puffleID).then((result) => {
+		penguin.knex("puffles").select("*").where({
+			ID: penguin.id,
+			puffleID: puffleID
+		}).then((result) => {
 			if (result.length <= 0) return
 
 			let puffle = this.joinPuffleData(result, true)
@@ -336,9 +378,21 @@ class Pet {
 				}
 			}
 
-			penguin.database.adoptPuffle(penguin.id, puffleName, puffleType).then(() => {
+			penguin.knex("puffles").insert({
+				ID: penguin.id,
+				puffleName: puffleName,
+				puffleType: puffleType,
+				puffleFood: 100,
+				pufflePlay: 100,
+				puffleRest: 100,
+				puffleWalk: 0
+			}).then(() => {
 				penguin.removeCoins(800)
-				penguin.database.getPuffleByName(penguin.id, puffleName).then((result) => {
+
+				penguin.knex("puffles").select("*").where({
+					ID: penguin.id,
+					puffleName: puffleName
+				}).then((result) => {
 					if (result.length <= 0) return
 
 					let puffle = this.joinPuffleData(result)

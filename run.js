@@ -12,3 +12,7 @@ if (serverConfiguration) {
 	throw new Error("Couldn't locate server configuration")
 	process.exit(1)
 }
+
+process.on("uncaughtException", (err) => {
+	console.log(err)
+})

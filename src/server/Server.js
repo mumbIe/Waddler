@@ -39,10 +39,10 @@ class Server {
 	startServer() {
 		require("net").createServer(socket => {
 			socket.setEncoding("utf8")
+			socket.setNoDelay(true)
 			socket.setTimeout(600000, () => {
 				socket.end("Disconnected inactive socket")
 			})
-			socket.setNoDelay(true)
 
 			const penguin = new Penguin(socket, this)
 
@@ -50,26 +50,83 @@ class Server {
 
 			this.penguins.push(penguin)
 
-			Logger.info(`A client has connected`)
+			Logger.info("A client has connected")
 
 			socket.on("data", (data) => {
-				return this.dataHandler.handleData(data.toString().split("\0")[0], penguin)
+				data = data.toString().split("\0")[0]
+
+				if (!["<", "%"].includes(data.charAt(0))) return penguin.disconnect()
+
+				Logger.incoming(data)
+
+				if (data.charAt(0) === "%") return this.dataHandler.handleGame(data, penguin)
+				if (data.charAt(0) === "<") return this.dataHandler.handleXML(data, penguin)
 			})
 
 			socket.on("close", () => {
-				Logger.info(`A client has disconnected`)
-				return penguin.disconnect()
+				Logger.info("A client has been disconnected")
+				penguin.disconnect()
 			})
 
 			socket.on("error", (error) => {
 				if (error.code === "ETIMEDOUT" || error.code === "ECONNRESET") return
+				if (error.code === "EADDRINUSE") return Logger.error(`${this.port} is already in use`)
 				Logger.error(error)
-				return penguin.disconnect()
 			})
 
 		}).listen(this.port, () => {
 			Logger.info(`Waddler {${this.type}} listening on port ${this.port} by ID ${this.id}`)
 		})
+	}
+
+	handleShutdown() {
+		if (this.penguins.length > 0) {
+			Logger.info("Server shutting down in 3 seconds")
+			Logger.info(`Disconnecting ${this.penguins.length} client(s)`)
+
+			setTimeout(() => {
+				for (const penguin of this.penguins) {
+					penguin.disconnect()
+				}
+				process.exit(0)
+			}, 3000)
+
+		} else {
+			Logger.info("No clients connected, shutting down instantly")
+			process.exit(0)
+		}
+	}
+
+	removePenguin(penguin) {
+		const index = this.penguins.indexOf(penguin)
+
+		if (index > -1) {
+			Logger.info("Removing client")
+
+			if (penguin.room) penguin.room.removePenguin(penguin)
+			if (penguin.tableId) this.gameManager.leaveTable(penguin)
+
+			if (this.type === "game" && penguin.id !== undefined) {
+				if (penguin.buddies.length !== 0) {
+					penguin.buddies.forEach(buddy => {
+						const buddyID = Number(buddy.split("|")[0])
+
+						if (this.isPenguinOnline(buddyID)) this.getPenguinById(buddyID).sendXt("bof", -1, penguin.id)
+					})
+				}
+			}
+
+			if (this.roomManager) {
+				const igloo = (penguin.id + 1000)
+
+				if (this.roomManager.checkIgloo(igloo)) this.roomManager.closeIgloo(igloo)
+			}
+
+			this.penguins.splice(index, 1)
+
+			penguin.socket.end()
+			penguin.socket.destroy()
+		}
 	}
 
 	calculateWorldPopulation(capacity) {
@@ -145,56 +202,6 @@ class Server {
 
 	isPluginEnabled(plugin) {
 		return this.getPlugin(plugin) !== undefined
-	}
-
-	handleShutdown() {
-		if (this.penguins.length > 0) {
-			Logger.info("Server shutting down in 3 seconds")
-			Logger.info(`Disconnecting ${this.penguins.length} client(s)`)
-			setTimeout(() => {
-				for (const penguin of this.penguins) {
-					penguin.disconnect()
-				}
-				process.exit(0)
-			}, 3000)
-		} else {
-			Logger.info("No clients connected, shutting down instantly")
-			process.exit(0)
-		}
-	}
-
-	removePenguin(penguin) {
-		const index = this.penguins.indexOf(penguin)
-
-		if (index > -1) {
-			Logger.info("Removing client")
-
-			if (penguin.room) penguin.room.removePenguin(penguin)
-			if (penguin.tableId) this.gameManager.leaveTable(penguin)
-
-			if (this.type === "game" && penguin.id !== undefined) {
-				if (penguin.buddies.length !== 0) {
-					penguin.buddies.forEach(buddy => {
-						buddy = buddy.split("|")
-						const buddyID = Number(buddy[0])
-						if (this.isPenguinOnline(buddyID)) {
-							this.getPenguinById(buddyID).sendXt("bof", -1, penguin.id)
-						}
-					})
-				}
-			}
-
-			if (this.roomManager) {
-				const igloo = (penguin.id + 1000)
-
-				if (this.roomManager.checkIgloo(igloo)) this.roomManager.closeIgloo(igloo)
-			}
-
-			this.penguins.splice(index, 1)
-
-			penguin.socket.end()
-			penguin.socket.destroy()
-		}
 	}
 }
 

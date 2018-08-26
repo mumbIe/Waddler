@@ -14,13 +14,15 @@
 		}
 	},
 
-	"debug": false,
+	"Database": {
+		"client": "mysql2",
+		"host": "localhost",
+		"user": "root",
+		"pass": "",
+		"database": "waddler"
+	},
 
-	"client": "mysql2",
-	"host": "localhost",
-	"user": "root",
-	"pass": "",
-	"database": "waddler",
+	"debug": false,
 
 	"Plugins": [{
 		"name": "Bot",

@@ -4,7 +4,7 @@ class Ignore {
 	static handleGetIgnored(data, penguin) {
 		let ignoreStr = ""
 
-		penguin.database.getIgnored(penguin.id).then((result) => {
+		penguin.knex("ignored").select("ignoredID", "ignoredUsername").where("ID", penguin.id).then((result) => {
 			if (result.length <= 0) return penguin.sendXt("gn", -1, "")
 
 			result.forEach(row => {
@@ -46,7 +46,11 @@ class Ignore {
 				})
 			}
 
-			penguin.database.addIgnore(penguin.id, toIgnore, usernameToIgnore).then(() => {
+			penguin.knex("ignored").insert({
+				ID: penguin.id,
+				ignoredID: toIgnore,
+				ignoredUsername: usernameToIgnore
+			}).then(() => {
 				penguin.sendXt("an", -1, toIgnore)
 
 				this.handleGetIgnored("Your mom", penguin)
@@ -80,7 +84,11 @@ class Ignore {
 				})
 			}
 
-			penguin.database.removeIgnore(penguin.id, toRemove, usernameToRemove).then(() => {
+			penguin.knex("ignored").del().where({
+				ID: penguin.id,
+				ignoredID: toRemove,
+				ignoredUsername: usernameToRemove
+			}).then(() => {
 				penguin.sendXt("rn", -1, toRemove)
 			})
 		})

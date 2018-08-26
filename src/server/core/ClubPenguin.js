@@ -41,8 +41,13 @@ class ClubPenguin {
 
 		this.removeCoins(cost)
 		this.inventory.push(itemID)
-		this.database.insertItem(this.id, itemID)
-		this.sendXt("ai", -1, itemID, this.coins)
+
+		this.knex("inventory").insert({
+			ID: this.id,
+			itemID: itemID
+		}).then(() => {
+			this.sendXt("ai", -1, itemID, this.coins)
+		})
 	}
 
 	addFurniture(furnitureID) {
@@ -55,7 +60,15 @@ class ClubPenguin {
 		this.removeCoins(cost)
 
 		this.getColumn("furnitureID", "furniture").then((result) => {
-			result.length != 0 ? this.database.updateQuantity(this.id) : this.database.insertFurniture(this.id, furnitureID)
+			if (result.length !== 0) {
+				this.knex.raw("UPDATE `furniture` SET `quantity` = quantity + ? WHERE `ID` = ?", [1, this.id]).then(() => {})
+			} else {
+				this.knex("furniture").insert({
+					ID: this.id,
+					furnitureID: furnitureID,
+					quantity: 1
+				}).then(() => {})
+			}
 
 			this.sendXt("af", -1, furnitureID, this.coins)
 		})
@@ -77,7 +90,7 @@ class ClubPenguin {
 
 			if (igloos.includes(iglooID)) return this.sendError(500)
 
-			this.database.addIgloo(this.id, iglooID)
+			this.knex.raw('UPDATE `penguins` SET `igloos` =' + `concat(igloos, "|", ${iglooID})` + 'WHERE `ID` = ?', [this.id]).then(() => {})
 
 			if (this.room.id === (this.id + 1000)) this.sendXt("au", -1, iglooID, this.coins)
 		})
@@ -101,7 +114,10 @@ class ClubPenguin {
 		if (!stamp_crumbs[stampID]) return
 		if (this.stamps.includes(stampID)) return
 
-		this.database.insertStamp(this.id, stampID).then(() => {
+		this.knex("stamps").insert({
+			ID: this.id,
+			stampID: stampID
+		}).then(() => {
 			this.sendXt("aabs", -1, stampID)
 			this.stamps.push(stampID)
 		})

@@ -10,7 +10,7 @@ class Igloo {
 	}
 
 	static handleGetFurniture(data, penguin) {
-		penguin.database.getFurnitureAndQuantity(penguin.id).then((result) => {
+		penguin.knex("furniture").select("furnitureID", "quantity").where("ID", penguin.id).then((result) => {
 			if (result.length <= 0) return penguin.sendXt("gf", -1, "")
 
 			result.forEach(row => {
