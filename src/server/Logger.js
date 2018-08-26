@@ -2,6 +2,8 @@
 
 const isDebug = require("../config").debug
 
+const chalk = require("chalk")
+
 class Logger {
 	static saveLog(lvl, msg) {
 		require("fs").appendFile(`${__dirname}\\logs\\${lvl}.log`, `${this.getLogTime(new Date())} - ${msg}\r\n`, (err) => {
@@ -23,12 +25,12 @@ class Logger {
 	}
 	static incoming(msg) {
 		const x = `[INCOMING] > ${msg}`
-		console.log(`\x1b[46m%s\x1b[0m`, x)
+		console.log(chalk.bgWhite.blueBright.bold(x))
 		this.saveLog("incoming", isDebug ? this.print_r(msg) : x)
 	}
 	static outgoing(msg) {
 		const x = `[OUTGOING] > ${msg}`
-		console.log(`\x1b[46m%s\x1b[0m`, x)
+		console.log(chalk.bgWhite.magentaBright.bold(x))
 		this.saveLog("outgoing", isDebug ? this.print_r(msg) : x)
 	}
 	static unknown(msg) {

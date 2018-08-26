@@ -110,8 +110,6 @@ class Player {
 					result.photo
 				]
 				penguin.sendXt("gp", -1, playerInfo.join("|") + "|")
-			}).catch((err) => {
-				console.error(err)
 			})
 		})
 	}
@@ -166,7 +164,7 @@ class Player {
 
 		penguin.addCoins(amount)
 		penguin.sendXt("cdu", -1, amount, penguin.coins)
-		penguin.coinDig++
+		penguin.coinDig++;
 	}
 
 	static handleSendQuickMessage(data, penguin) {

@@ -15,7 +15,6 @@ class Navigation {
 		penguin.sendXt("lp", -1, penguin.buildPlayerString(), penguin.coins, 0, 1440, sp.getTime(), penguin.age, 4, 1)
 
 		this.handleJoinRoom({
-			3: "j#jr",
 			4: randomRoom,
 			5: x,
 			6: y

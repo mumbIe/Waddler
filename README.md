@@ -21,11 +21,12 @@ A rich-featured open source Club Penguin emulator, written in Node.js.
 # Setup
 
 ## Installation
-* [Node.js](https://nodejs.org/en/)
-* [MySQL](https://www.mysql.com)
-* [NGINX](https://www.nginx.com) or [APACHE](https://httpd.apache.org)
-* Download and extract an Actionscript 2 mediaserver into your htdocs (https://mega.nz/#!Jl4xxJKD!QFHEYej4TBt6TnbZsZoLO-NiPh5jDPNR_vh69GeLfC8 <- preconfigured `localhost` Waddler mediaserver)
-* Download and extract Waddler into a folder
+* [Node.js](https://nodejs.org/en/) [TUTORIAL](https://www.youtube.com/watch?v=epH81xhS6mk)
+* [MySQL](https://www.mysql.com) [TUTORIAL](https://www.youtube.com/watch?v=WuBcTJnIuzo)
+* [NGINX](https://www.nginx.com) [TUTORIAL](https://www.youtube.com/watch?v=3xTsxEuPzfg)
+* An Actionscript 2 mediaserver that is extracted into the htdocs of NGINX [AS2 Mediaserver](https://icer.ink/.repo/legacy/media.zip)
+* Waddler that is downloaded and extracted into a separate folder (i.e on your desktop)
+* Make sure to `edit` the loader (`boots.swf` if using the media.zip). This has ports and urls that `must be changed to your Waddler config`
 
 ## MySQL
 * In Waddler, go to `/setup/SQL/` and import the SQL file on something like PHPMYADMIN
@@ -50,3 +51,7 @@ A rich-featured open source Club Penguin emulator, written in Node.js.
 * In the same folder where `package.json` is located, enter on Command Prompt `node run.js 1 (1 as default ID for login)`
 * Open another Command Prompt and browse to the folder where `package.json` is located using CD and enter on Command Prompt: `node run.js 100 (100 as default ID for world)`
 * Make sure MySQL, the register and your webserver are running
+
+# Credits
+
+The server layout is a little bit based off Onyx, which I do not take any credit for, but allowed to use.

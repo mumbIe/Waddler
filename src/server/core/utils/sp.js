@@ -9,21 +9,29 @@ class sp {
 		return (Math.floor(new Date() / 1000))
 	}
 
+	static range(min, max) {
+		const result = []
+
+		for (let i = min; i < max; i += 1) result.push(i)
+
+		return result
+	}
+
 	static isNonDividableGame(gameId) {
 		return [916, 906, 905, 904, 912].includes(gameId)
 	}
 	static isFindFourTable(tableId) {
-		return [200, 201, 202, 203, 204, 205, 206, 207].includes(tableId)
+		return this.range(200, 208).includes(tableId)
 	}
 	static isMancalaTable(tableId) {
-		return [100, 101, 102, 103, 104].includes(tableId)
+		return this.range(100, 104).includes(tableId)
 	}
 	static isTreasureHuntTable(tableId) {
-		return [300, 301, 302, 303, 304, 305, 306, 307].includes(tableId)
+		return this.range(300, 308).includes(tableId)
 	}
 
 	static getRandomCoins() {
-		return [1, 2, 5, 10, 20, 50, 100][Math.floor(Math.random() * 7)]
+		return Math.floor(Math.random() * 100) + 1
 	}
 	static getRandomRoom() {
 		return [100, 110, 300, 400][Math.floor(Math.random() * 4)]
