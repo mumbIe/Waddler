@@ -61,7 +61,10 @@ class ClubPenguin {
 
 		this.getColumn("furnitureID", "furniture").then((result) => {
 			if (result.length !== 0) {
-				this.knex.raw("UPDATE `furniture` SET `quantity` = quantity + ? WHERE `ID` = ?", [1, this.id]).then(() => {})
+				this.knex("furniture").increment("quantity", 1).where({
+					ID: this.id,
+					furnitureID
+				})
 			} else {
 				this.knex("furniture").insert({
 					ID: this.id,
@@ -78,19 +81,28 @@ class ClubPenguin {
 		if (!igloo_crumbs[iglooID]) return this.sendError(402)
 
 		const cost = igloo_crumbs[iglooID].cost
-
 		if (this.coins < cost) return this.sendError(401)
-
 		this.removeCoins(cost)
 
 		this.getColumn("igloos").then((result) => {
 			let igloos = []
+			let iglooStr = ""
 
 			for (const i of result[0].igloos.split("|")) igloos.push(parseInt(i))
 
-			if (igloos.includes(iglooID)) return this.sendError(500)
+			if (igloos.length !== 0) {
+				if (igloos.includes(iglooID)) {
+					return this.sendError(500)
+				}
 
-			this.knex.raw('UPDATE `penguins` SET `igloos` =' + `concat(igloos, "|", ${iglooID})` + 'WHERE `ID` = ?', [this.id]).then(() => {})
+				igloos.forEach(igloo => {
+					iglooStr += `${igloo}|`
+				})
+
+				iglooStr += iglooID
+			}
+
+			this.updateColumn("igloos", igloos.length === 0 ? iglooID : iglooStr)
 
 			if (this.room.id === (this.id + 1000)) this.sendXt("au", -1, iglooID, this.coins)
 		})
@@ -110,7 +122,6 @@ class ClubPenguin {
 
 	addStamp(stampID) {
 		if (isNaN(stampID)) return
-
 		if (!stamp_crumbs[stampID]) return
 		if (this.stamps.includes(stampID)) return
 
