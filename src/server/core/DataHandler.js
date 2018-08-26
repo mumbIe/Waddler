@@ -51,8 +51,7 @@ class DataHandler {
 					return penguin.sendError(101, true)
 				}
 			}
-		}).catch((err) => {
-			Logger.error(err)
+		}).catch(() => {
 			return penguin.sendError(100, true)
 		})
 	}

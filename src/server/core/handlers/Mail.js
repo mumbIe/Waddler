@@ -8,22 +8,8 @@ class Mail {
 			penguin.database.getPostcardCount(penguin.id).then((result) => {
 				const readPostcards = Number(result.length)
 
-				if (readPostcards >= 1) {
-					penguin.database.getPostcardsById(penguin.id).then((result) => {
-						result.forEach(row => {
-							penguin.postcards.push(row.ID)
-						})
-					}).catch((err) => {
-						console.error(err)
-					})
-				}
-
 				penguin.sendXt("mst", -1, unreadPostcards, readPostcards)
-			}).catch((err) => {
-				console.error(err)
 			})
-		}).catch((err) => {
-			console.error(err)
 		})
 	}
 
@@ -40,16 +26,12 @@ class Mail {
 			if (mailArr.length <= 0) return penguin.sendXt("mg", -1, "")
 
 			penguin.sendXt("mg", -1, mailArr.reverse().join("%"))
-		}).catch((err) => {
-			console.error(err)
 		})
 	}
 
 	static handleMailChecked(data, penguin) {
 		penguin.database.mailChecked(penguin.id).then(() => {
 			penguin.sendXt("mc", -1)
-		}).catch((err) => {
-			console.error(err)
 		})
 	}
 
@@ -80,11 +62,7 @@ class Mail {
 					if (playerObj) {
 						playerObj.sendXt("mr", -1, penguin.username, penguin.id, mailType, "", sentDate, result)
 					}
-				}).catch((err) => {
-					console.error(err)
 				})
-			}).catch((err) => {
-				console.error(err)
 			})
 		})
 	}
@@ -94,12 +72,8 @@ class Mail {
 
 		if (isNaN(mailID)) return penguin.disconnect()
 
-		if (!penguin.postcards.includes(mailID)) return
-
 		penguin.database.deleteMail(mailID).then(() => {
 			penguin.sendXt("md", -1, mailID)
-		}).catch((err) => {
-			console.error(err)
 		})
 	}
 
@@ -114,11 +88,7 @@ class Mail {
 			penguin.database.deleteMailFromPlayer(penguin.id, penguinID).then(() => {
 				penguin.database.getPostcardCount(penguin.id).then((result) => {
 					penguin.sendXt("mdp", -1, Number(result.length))
-				}).catch((err) => {
-					console.error(err)
 				})
-			}).catch((err) => {
-				console.error(err)
 			})
 		})
 	}

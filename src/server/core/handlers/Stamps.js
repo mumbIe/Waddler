@@ -21,9 +21,7 @@ class Stamps {
 					stampStr += `${row.stampID}|`
 				})
 
-				penguin.sendXt("gps", -1, penguinID, `${stampStr.slice(0, -1)}`)
-			}).catch((err) => {
-				console.error(err)
+				penguin.sendXt("gps", -1, penguinID, stampStr.length === 0 ? "" : `${stampStr.slice(0, -1)}`)
 			})
 		})
 	}
@@ -38,58 +36,46 @@ class Stamps {
 
 			let pinStr = ""
 
-			let pins, items
+			const items = require("../../crumbs/items")
+			const pins = require("../../crumbs/pins")
 
-			penguin.server.decodeCrumb("pins").then((pin_crumbs) => {
-				pins = pin_crumbs
+			const playerObj = penguin.server.getPenguinById(penguinID)
 
-				penguin.server.decodeCrumb("items").then((item_crumbs) => {
-					items = item_crumbs
+			if (playerObj) {
+				if (playerObj.inventory.length === 0) return playerObj.sendXt("qpp", -1, "")
 
-					const playerObj = penguin.server.getPenguinById(penguinID)
-
-					if (playerObj) {
-						if (playerObj.inventory.length !== 0) {
-
-							playerObj.inventory.forEach(item => {
-								if (items[item].type === "pin") {
-									if (pins[item] !== undefined) {
-										pinStr += `${item}|${pins[item].unix}|1%`
-									} else {
-										pinStr += `${item}|${sp.getTime()}|1%`
-									}
-								}
-							})
-
-							if (pinStr.length === 0) return playerObj.sendXt("qpp", -1, "")
-
-							playerObj.sendXt("qpp", -1, `${pinStr.slice(0, -1)}`)
+				playerObj.inventory.forEach(item => {
+					if (items[item].type === "pin") {
+						if (pins[item] !== undefined) {
+							pinStr += `${item}|${pins[item].unix}|1%`
 						} else {
-							return playerObj.sendXt("qpp", -1, "")
+							pinStr += `${item}|${sp.getTime()}|1%`
 						}
-					} else {
-						penguin.database.getColumn(penguinID, "itemID", "inventory").then((result) => {
-							if (result.length <= 0) return penguin.sendXt("qpp", -1, "")
-
-							result.forEach(row => {
-								if (items[row.itemID].type === "pin") {
-									if (pins[row.itemID] !== undefined) {
-										pinStr += `${row.itemID}|${pins[row.itemID].unix}|1%`
-									} else {
-										pinStr += `${row.itemID}|${sp.getTime()}|1%`
-									}
-								}
-							})
-
-							if (pinStr.length === 0) return penguin.sendXt("qpp", -1, "")
-
-							penguin.sendXt("qpp", -1, `${pinStr.slice(0, -1)}`)
-						}).catch((err) => {
-							console.error(err)
-						})
 					}
 				})
-			})
+
+				if (pinStr.length === 0) return playerObj.sendXt("qpp", -1, "")
+
+				playerObj.sendXt("qpp", -1, `${pinStr.slice(0, -1)}`)
+			} else {
+				penguin.database.getColumn(penguinID, "itemID", "inventory").then((result) => {
+					if (result.length <= 0) return penguin.sendXt("qpp", -1, "")
+
+					result.forEach(row => {
+						if (items[row.itemID].type === "pin") {
+							if (pins[row.itemID] !== undefined) {
+								pinStr += `${row.itemID}|${pins[row.itemID].unix}|1%`
+							} else {
+								pinStr += `${row.itemID}|${sp.getTime()}|1%`
+							}
+						}
+					})
+
+					if (pinStr.length === 0) return penguin.sendXt("qpp", -1, "")
+
+					penguin.sendXt("qpp", -1, `${pinStr.slice(0, -1)}`)
+				})
+			}
 		})
 	}
 
@@ -103,44 +89,33 @@ class Stamps {
 
 			let awardStr = ""
 
-			let awards
+			const awards = require("../../crumbs/awards")
 
-			penguin.server.decodeCrumb("awards").then((award_crumbs) => {
-				awards = award_crumbs
+			const playerObj = penguin.server.getPenguinById(penguinID)
 
-				const playerObj = penguin.server.getPenguinById(penguinID)
+			if (playerObj) {
+				if (playerObj.inventory.length === 0) return playerObj.sendXt("qpa", -1, "")
 
-				if (playerObj) {
-					if (playerObj.inventory.length !== 0) {
-
-						playerObj.inventory.forEach(award => {
-							if (awards[award]) awardStr += `${award}|${awards[award].unix}|1%`
-						})
-
-						if (awardStr.length === 0) return playerObj.sendXt("qpa", -1, "")
-
-						playerObj.sendXt("qpa", -1, `${awardStr.slice(0, -1)}`)
-					} else {
-						return playerObj.sendXt("qpa", -1, "")
+				playerObj.inventory.forEach(award => {
+					if (awards[award]) {
+						awardStr += `${award}|${awards[award].unix}|1%`
 					}
-				} else {
-					penguin.database.getColumn(penguinID, "itemID", "inventory").then((result) => {
-						if (result.length <= 0) return penguin.sendXt("qpa", -1, "")
+				})
 
-						result.forEach(row => {
-							if (awards[row.itemID]) {
-								awardStr += `${row.itemID}|${awards[row.itemID].unix}|1%`
-							}
-						})
+				playerObj.sendXt("qpa", -1, awardStr.length === 0 ? "" : `${awardStr.slice(0, -1)}`)
+			} else {
+				penguin.database.getColumn(penguinID, "itemID", "inventory").then((result) => {
+					if (result.length <= 0) return penguin.sendXt("qpa", -1, "")
 
-						if (awardStr.length === 0) return penguin.sendXt("qpa", -1, "")
-
-						penguin.sendXt("qpa", -1, `${awardStr.slice(0, -1)}`)
-					}).catch((err) => {
-						console.error(err)
+					result.forEach(row => {
+						if (awards[row.itemID]) {
+							awardStr += `${row.itemID}|${awards[row.itemID].unix}|1%`
+						}
 					})
-				}
-			})
+
+					penguin.sendXt("qpa", -1, awardStr.length === 0 ? "" : `${awardStr.slice(0, -1)}`)
+				})
+			}
 		})
 	}
 
@@ -154,8 +129,6 @@ class Stamps {
 
 			penguin.database.getColumn(penguinID, "cover").then((result) => {
 				penguin.sendXt("gsbcd", -1, result[0].cover)
-			}).catch((err) => {
-				console.error(err)
 			})
 		})
 	}
@@ -169,7 +142,6 @@ class Stamps {
 		if (isNaN(p4) || isNaN(p5) || isNaN(p6) || isNaN(p7)) return penguin.disconnect()
 
 		let cover = [p4, p5, p6, p7].join("%")
-		cover += "%"
 
 		data.forEach(row => {
 			if (row.length > 13) {
@@ -183,13 +155,7 @@ class Stamps {
 			}
 		})
 
-		penguin.getColumn("cover").then((result) => {
-			if (cover === result[0].cover) return
-
-			penguin.updateColumn("cover", cover)
-		}).catch((err) => {
-			console.error(err)
-		})
+		penguin.updateColumn("cover", cover)
 
 		penguin.sendXt("ssbcd", -1)
 	}

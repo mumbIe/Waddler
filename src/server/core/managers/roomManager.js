@@ -2,30 +2,24 @@
 
 const Logger = require("../../Logger")
 const Room = require("../system/Room")
+const Rooms = require("../../crumbs/rooms")
 
 class roomManager {
-	constructor(server) {
+	constructor() {
 		this.rooms = []
-		this.server = server
 
-		this.roomCrumbs = require("../../crumbs/rooms")
-
-		this.server.decodeCrumb("rooms").then((room_crumbs) => {
-			for (const id of Object.keys(room_crumbs)) {
-				if (id < 900) {
-					this.createRoom(id)
-				}
+		for (const id of Object.keys(Rooms)) {
+			if (id < 900) {
+				this.createRoom(id)
 			}
+		}
 
-			Logger.info(`Loaded ${this.rooms.length} rooms`)
-		}).catch((err) => {
-			console.log(err)
-		})
+		Logger.info(`Loaded ${this.rooms.length} rooms`)
 	}
 
 	createRoom(id) {
 		if (!this.rooms[id]) {
-			return this.rooms[id] = new Room(id, this)
+			return this.rooms[id] = new(require("../system/Room"))(id, this)
 		}
 	}
 
@@ -53,7 +47,7 @@ class roomManager {
 
 	checkRoomFull(id) {
 		if (this.rooms[id]) {
-			return this.rooms[id].penguins.length === this.roomCrumbs[id].MaxUsers
+			return this.rooms[id].penguins.length === Rooms[id].MaxUsers
 		}
 		return false
 	}

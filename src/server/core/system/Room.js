@@ -1,11 +1,9 @@
 "use strict"
 
 class Room {
-	constructor(id, manager) {
+	constructor(id) {
 		this.penguins = []
 		this.id = id
-		this.parent = manager
-		this.server = manager.server
 	}
 
 	addPenguin(penguin, coords) {

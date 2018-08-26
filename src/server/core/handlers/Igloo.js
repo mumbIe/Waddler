@@ -16,8 +16,6 @@ class Igloo {
 			result.forEach(row => {
 				penguin.sendXt("gf", -1, [row.furnitureID, row.quantity].join("|") + "|")
 			})
-		}).catch((err) => {
-			console.error(err)
 		})
 	}
 
@@ -35,8 +33,6 @@ class Igloo {
 				const iglooStr = `${result[0].type}%${result[0].music}%${result[0].floor}%${result[0].furniture}%${result[0].locked}`
 
 				penguin.sendXt("gm", -1, penguin.id, iglooStr)
-			}).catch((err) => {
-				console.error(err)
 			})
 		})
 	}
@@ -63,8 +59,6 @@ class Igloo {
 			if (iglooStr.length <= 0) return penguin.sendXt("go", -1, "")
 
 			penguin.sendXt("go", -1, iglooStr.split("|").join("|"))
-		}).catch((err) => {
-			console.error(err)
 		})
 	}
 

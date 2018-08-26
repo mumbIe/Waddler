@@ -13,16 +13,6 @@ class Pet {
 		})
 	}
 
-	static getStats(puffleType) {
-		const puffleCrumbs = require("../../crumbs/puffles")
-
-		puffleType = Number(puffleType)
-
-		if (!puffleCrumbs[puffleType]) return 800
-
-		return [puffleCrumbs[puffleType].max_health, puffleCrumbs[puffleType].max_hunger, puffleCrumbs[puffleType].max_rest]
-	}
-
 	static joinPuffleData(puffleData, iglooAppend = false) {
 		let puffleArray = []
 
@@ -33,10 +23,7 @@ class Pet {
 
 			if (iglooAppend) {
 				if (puffles[puffleID] === undefined) {
-					const stats = this.getStats(puffle["puffleType"])
-					if (stats.constructor.name !== "Array") return penguin.sendError(stats, true)
-
-					puffles[puffleID] = [stats[0], stats[1], stats[2], 0, 0, 0, 0]
+					puffles[puffleID] = [100, 100, 100, 0, 0, 0, 0]
 				}
 				puffleDetails = puffleDetails.concat(puffles[puffleID])
 			}
@@ -57,8 +44,6 @@ class Pet {
 				if (result.length <= 0) return penguin.sendXt("pg", -1)
 
 				penguin.sendXt("pg", -1, this.joinPuffleData(result, true))
-			}).catch((err) => {
-				console.error(err)
 			})
 		})
 	}
@@ -68,8 +53,6 @@ class Pet {
 			if (result.length <= 0) return penguin.sendXt("pg", -1)
 
 			penguin.sendXt("pgu", -1, this.joinPuffleData(result, true))
-		}).catch((err) => {
-			console.error(err)
 		})
 	}
 
@@ -91,8 +74,6 @@ class Pet {
 			puffle = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("pr", -1, puffle)
-		}).catch((err) => {
-			console.error(err)
 		})
 	}
 
@@ -114,8 +95,6 @@ class Pet {
 			puffle = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("pp", -1, puffle, 1)
-		}).catch((err) => {
-			console.error(err)
 		})
 	}
 
@@ -139,8 +118,6 @@ class Pet {
 			puffle = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("pt", -1, penguin.coins, puffle, treatID)
-		}).catch((err) => {
-			console.error(err)
 		})
 	}
 
@@ -162,8 +139,6 @@ class Pet {
 			puffle = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("pf", -1, penguin.coins, puffle)
-		}).catch((err) => {
-			console.error(err)
 		})
 	}
 
@@ -185,8 +160,6 @@ class Pet {
 			puffle = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("pb", -1, penguin.coins, puffle)
-		}).catch((err) => {
-			console.error(err)
 		})
 	}
 
@@ -201,8 +174,6 @@ class Pet {
 			let puffle = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("ir", -1, puffle)
-		}).catch((err) => {
-			console.error(err)
 		})
 	}
 
@@ -217,8 +188,6 @@ class Pet {
 			let puffle = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("ip", -1, puffle)
-		}).catch((err) => {
-			console.error(err)
 		})
 	}
 
@@ -233,8 +202,6 @@ class Pet {
 			let puffle = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("if", -1, puffle)
-		}).catch((err) => {
-			console.error(err)
 		})
 	}
 
@@ -258,8 +225,6 @@ class Pet {
 			puffle = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("pir", -1, puffleID, puffleX, puffleY)
-		}).catch((err) => {
-			console.error(err)
 		})
 	}
 
@@ -283,8 +248,6 @@ class Pet {
 			puffle = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("pip", -1, puffleID, puffleX, puffleY)
-		}).catch((err) => {
-			console.error(err)
 		})
 	}
 
@@ -302,16 +265,11 @@ class Pet {
 
 			if (puffles[puffleID] === undefined) return
 
-			const stats = this.getStats(result[0].puffleType)
-			if (stats.constructor.name !== "Array") return penguin.sendError(stats, true)
-
-			puffles[puffleID] = [stats[0], stats[1], stats[2], puffleX, puffleY, 0, 0]
+			puffles[puffleID] = [100, 100, 100, puffleX, puffleY, 0, 0]
 
 			puffle = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("pm", -1, puffleID, puffleX, puffleY)
-		}).catch((err) => {
-			console.error(err)
 		})
 	}
 
@@ -325,8 +283,6 @@ class Pet {
 			if (result.length <= 0) return
 
 			penguin.room.sendXt("ps", -1, puffleID, puffleFrame)
-		}).catch((err) => {
-			console.error(err)
 		})
 	}
 
@@ -352,18 +308,13 @@ class Pet {
 				walking = 0
 			}
 
-			const stats = this.getStats(puffleType)
-			if (stats.constructor.name !== "Array") return penguin.sendError(stats, true)
-
-			puffles[puffleID] = [stats[0], stats[1], stats[2], 0, 0, 0, walking]
+			puffles[puffleID] = [100, 100, 100, 0, 0, 0, walking]
 
 			this.handleUpdatePuffle("puffleWalk", walking, puffleID, penguin)
 
 			let puffleData = this.joinPuffleData(result, true)
 
 			penguin.room.sendXt("pw", -1, penguin.id, puffleData)
-		}).catch((err) => {
-			console.error(err)
 		})
 	}
 
@@ -385,10 +336,7 @@ class Pet {
 				}
 			}
 
-			const stats = this.getStats(puffleType)
-			if (stats.constructor.name !== "Array") return penguin.sendError(stats, true)
-
-			penguin.database.adoptPuffle(penguin.id, puffleName, puffleType, stats).then(() => {
+			penguin.database.adoptPuffle(penguin.id, puffleName, puffleType).then(() => {
 				penguin.removeCoins(800)
 				penguin.database.getPuffleByName(penguin.id, puffleName).then((result) => {
 					if (result.length <= 0) return

@@ -12,8 +12,7 @@
 	"dependencies": {
 		"knex": "^0.15.2",
 		"mysql2": "^1.6.1",
-		"keccak": "^1.4.0",
-		"msgpuck": "^0.5.2"
+		"keccak": "^1.4.0"
 	},
 	"author": "Zaseth",
 	"license": "MIT"

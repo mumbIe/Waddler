@@ -54,7 +54,6 @@ class Penguin extends ClubPenguin {
 
 		this.stamps = []
 		this.inventory = []
-		this.postcards = []
 
 		this.throttle = {}
 	}

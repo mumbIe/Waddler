@@ -7,10 +7,6 @@ const Penguin = require("./core/Penguin")
 
 const DataHandler = require("./core/DataHandler")
 
-const roomManager = require("./core/managers/roomManager")
-const gameManager = require("./core/managers/gameManager")
-const pluginLoader = require("./core/managers/pluginLoader")
-
 class Server {
 	constructor(options) {
 		if (!options.id || !options.type || !options.port) {
@@ -23,15 +19,15 @@ class Server {
 		this.port = options.port
 		this.maxPenguins = (options.maxPenguins ? options.maxPenguins : 100)
 
-		this.penguins = []
-
 		this.database = new Database()
 		this.dataHandler = new DataHandler(this)
 
+		this.penguins = []
+
 		if (this.type !== "login") {
-			this.roomManager = new roomManager(this)
-			this.gameManager = new gameManager(this)
-			this.pluginLoader = new pluginLoader()
+			this.roomManager = new(require("./core/managers/roomManager"))()
+			this.gameManager = new(require("./core/managers/gameManager"))(this)
+			this.pluginLoader = new(require("./core/managers/pluginLoader"))
 		}
 
 		this.startServer()
@@ -116,19 +112,6 @@ class Server {
 		}
 
 		return populationArr
-	}
-
-	decodeCrumb(crumb) {
-		const msgpuck = require("msgpuck")
-		const Decoder = new msgpuck.Decoder()
-
-		return new Promise((resolve, reject) => {
-			require("fs").readFile(`${__dirname}/crumbs/${crumb}.bin`, (err, data) => {
-				if (err) return reject(err)
-
-				return resolve(Decoder.decode(data))
-			})
-		})
 	}
 
 	getPenguinById(id) {

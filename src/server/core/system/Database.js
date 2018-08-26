@@ -131,14 +131,14 @@ class Database {
 			puffleName: puffleName
 		})
 	}
-	adoptPuffle(ID, puffleName, puffleType, stats) {
+	adoptPuffle(ID, puffleName, puffleType) {
 		return this.knex("puffles").insert({
 			ID: ID,
 			puffleName: puffleName,
 			puffleType: puffleType,
-			puffleFood: stats[0],
-			pufflePlay: stats[1],
-			puffleRest: stats[2],
+			puffleFood: 100,
+			pufflePlay: 100,
+			puffleRest: 100,
 			puffleWalk: 0
 		})
 	}

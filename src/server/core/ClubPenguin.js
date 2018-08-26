@@ -1,7 +1,15 @@
 "use strict"
 
+const item_crumbs = require("../crumbs/items")
+const furniture_crumbs = require("../crumbs/furniture")
+const igloo_crumbs = require("../crumbs/igloos")
+const floor_crumbs = require("../crumbs/floors")
+const stamp_crumbs = require("../crumbs/stamps")
+
 class ClubPenguin {
-	constructor() {}
+	constructor() {
+
+	}
 
 	addCoins(coins) {
 		if (isNaN(coins)) return
@@ -25,88 +33,77 @@ class ClubPenguin {
 		}
 
 		if (this.inventory.includes(itemID)) return this.sendError(400)
+		if (!item_crumbs[itemID]) return this.sendError(402)
 
-		this.server.decodeCrumb("items").then((item_crumbs) => {
-			if (!item_crumbs[itemID]) return this.sendError(402)
+		const cost = item_crumbs[itemID].cost
 
-			const cost = item_crumbs[itemID].cost
+		if (this.coins < cost) return this.sendError(401)
 
-			if (this.coins < cost) return this.sendError(401)
-
-			this.removeCoins(cost)
-			this.inventory.push(itemID)
-			this.database.insertItem(this.id, itemID)
-			this.sendXt("ai", -1, itemID, this.coins)
-		})
+		this.removeCoins(cost)
+		this.inventory.push(itemID)
+		this.database.insertItem(this.id, itemID)
+		this.sendXt("ai", -1, itemID, this.coins)
 	}
 
 	addFurniture(furnitureID) {
-		this.server.decodeCrumb("furniture").then((furniture_crumbs) => {
-			if (!furniture_crumbs[furnitureID]) return this.sendError(402)
+		if (!furniture_crumbs[furnitureID]) return this.sendError(402)
 
-			const cost = furniture_crumbs[furnitureID].cost
+		const cost = furniture_crumbs[furnitureID].cost
 
-			if (this.coins < cost) return this.sendError(401)
+		if (this.coins < cost) return this.sendError(401)
 
-			this.removeCoins(cost)
+		this.removeCoins(cost)
 
-			this.getColumn("furnitureID", "furniture").then((result) => {
-				result.length != 0 ? this.database.updateQuantity(this.id) : this.database.insertFurniture(this.id, furnitureID)
+		this.getColumn("furnitureID", "furniture").then((result) => {
+			result.length != 0 ? this.database.updateQuantity(this.id) : this.database.insertFurniture(this.id, furnitureID)
 
-				this.sendXt("af", -1, furnitureID, this.coins)
-			})
+			this.sendXt("af", -1, furnitureID, this.coins)
 		})
 	}
 
 	addIgloo(iglooID) {
-		this.server.decodeCrumb("igloos").then((igloo_crumbs) => {
-			if (!igloo_crumbs[iglooID]) return this.sendError(402)
+		if (!igloo_crumbs[iglooID]) return this.sendError(402)
 
-			const cost = igloo_crumbs[iglooID].cost
+		const cost = igloo_crumbs[iglooID].cost
 
-			if (this.coins < cost) return this.sendError(401)
+		if (this.coins < cost) return this.sendError(401)
 
-			this.removeCoins(cost)
+		this.removeCoins(cost)
 
-			this.getColumn("igloos").then((result) => {
-				let igloos = []
+		this.getColumn("igloos").then((result) => {
+			let igloos = []
 
-				for (const i of result[0].igloos.split("|")) igloos.push(parseInt(i))
+			for (const i of result[0].igloos.split("|")) igloos.push(parseInt(i))
 
-				if (igloos.includes(iglooID)) return this.sendError(500)
+			if (igloos.includes(iglooID)) return this.sendError(500)
 
-				this.database.addIgloo(this.id, iglooID)
+			this.database.addIgloo(this.id, iglooID)
 
-				if (this.room.id === (this.id + 1000)) this.sendXt("au", -1, iglooID, this.coins)
-			})
+			if (this.room.id === (this.id + 1000)) this.sendXt("au", -1, iglooID, this.coins)
 		})
 	}
 
 	addFloor(floorID) {
-		this.server.decodeCrumb("floors").then((floor_crumbs) => {
-			if (!floor_crumbs[floorID]) return this.sendError(402)
+		if (!floor_crumbs[floorID]) return this.sendError(402)
 
-			const cost = floor_crumbs[floorID].cost
+		const cost = floor_crumbs[floorID].cost
 
-			if (this.coins < cost) return this.sendError(401)
+		if (this.coins < cost) return this.sendError(401)
 
-			this.removeCoins(cost)
-			this.updateColumn("floor", floorID, "igloo")
-			this.sendXt("ag", -1, floorID, this.coins)
-		})
+		this.removeCoins(cost)
+		this.updateColumn("floor", floorID, "igloo")
+		this.sendXt("ag", -1, floorID, this.coins)
 	}
 
 	addStamp(stampID) {
-		this.server.decodeCrumb("stamps").then((stamp_crumbs) => {
-			if (isNaN(stampID)) return
+		if (isNaN(stampID)) return
 
-			if (!stamp_crumbs[stampID]) return
-			if (this.stamps.includes(stampID)) return
+		if (!stamp_crumbs[stampID]) return
+		if (this.stamps.includes(stampID)) return
 
-			this.database.insertStamp(this.id, stampID).then(() => {
-				this.sendXt("aabs", -1, stampID)
-				this.stamps.push(stampID)
-			})
+		this.database.insertStamp(this.id, stampID).then(() => {
+			this.sendXt("aabs", -1, stampID)
+			this.stamps.push(stampID)
 		})
 	}
 }
