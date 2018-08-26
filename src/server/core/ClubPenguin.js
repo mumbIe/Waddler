@@ -1,11 +1,5 @@
 "use strict"
 
-const item_crumbs = require("../crumbs/items")
-const furniture_crumbs = require("../crumbs/furniture")
-const igloo_crumbs = require("../crumbs/igloos")
-const floor_crumbs = require("../crumbs/floors")
-const stamp_crumbs = require("../crumbs/stamps")
-
 class ClubPenguin {
 	constructor() {
 
@@ -26,16 +20,10 @@ class ClubPenguin {
 	}
 
 	addItem(itemID) {
-		if (this.server.isPluginEnabled("PatchedItems")) {
-			if (this.server.getPlugin("PatchedItems").containsBaitItem(itemID) && !this.moderator) {
-				return this.sendError(410)
-			}
-		}
-
 		if (this.inventory.includes(itemID)) return this.sendError(400)
-		if (!item_crumbs[itemID]) return this.sendError(402)
+		if (!this.server.item_crumbs[itemID]) return this.sendError(402)
 
-		const cost = item_crumbs[itemID].cost
+		const cost = this.server.item_crumbs[itemID].cost
 
 		if (this.coins < cost) return this.sendError(401)
 
@@ -51,9 +39,9 @@ class ClubPenguin {
 	}
 
 	addFurniture(furnitureID) {
-		if (!furniture_crumbs[furnitureID]) return this.sendError(402)
+		if (!this.server.furniture_crumbs[furnitureID]) return this.sendError(402)
 
-		const cost = furniture_crumbs[furnitureID].cost
+		const cost = this.server.furniture_crumbs[furnitureID].cost
 
 		if (this.coins < cost) return this.sendError(401)
 
@@ -78,9 +66,9 @@ class ClubPenguin {
 	}
 
 	addIgloo(iglooID) {
-		if (!igloo_crumbs[iglooID]) return this.sendError(402)
+		if (!this.server.igloo_crumbs[iglooID]) return this.sendError(402)
 
-		const cost = igloo_crumbs[iglooID].cost
+		const cost = this.server.igloo_crumbs[iglooID].cost
 		if (this.coins < cost) return this.sendError(401)
 		this.removeCoins(cost)
 
@@ -109,9 +97,9 @@ class ClubPenguin {
 	}
 
 	addFloor(floorID) {
-		if (!floor_crumbs[floorID]) return this.sendError(402)
+		if (!this.server.floor_crumbs[floorID]) return this.sendError(402)
 
-		const cost = floor_crumbs[floorID].cost
+		const cost = this.server.floor_crumbs[floorID].cost
 
 		if (this.coins < cost) return this.sendError(401)
 
@@ -122,7 +110,7 @@ class ClubPenguin {
 
 	addStamp(stampID) {
 		if (isNaN(stampID)) return
-		if (!stamp_crumbs[stampID]) return
+		if (!this.server.stamp_crumbs[stampID]) return
 		if (this.stamps.includes(stampID)) return
 
 		this.knex("stamps").insert({

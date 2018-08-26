@@ -13,7 +13,8 @@
 		"knex": "^0.15.2",
 		"mysql2": "^1.6.1",
 		"keccak": "^1.4.0",
-		"chalk": "^2.4.1"
+		"chalk": "^2.4.1",
+		"mspguck": "^0.5.3"
 	},
 	"author": "Zaseth",
 	"license": "MIT"

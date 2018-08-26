@@ -14,9 +14,6 @@ A rich-featured open source Club Penguin emulator, written in Node.js.
 * Supports 3 minigames: Find Four, Mancala and Treasurehunt
 * Supports functions like: Igloos, Puffles, Postcards and more
 * Throttling system
-* Comes with a command system (default commands are already added)
-* Advanced censoring system
-* Multiple plugins
 
 # Setup
 

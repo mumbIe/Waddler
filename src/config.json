@@ -22,19 +22,5 @@
 		"database": "waddler"
 	},
 
-	"debug": false,
-
-	"Plugins": [{
-		"name": "Bot",
-		"enabled": true
-	}, {
-		"name": "Commands",
-		"enabled": true
-	}, {
-		"name": "Censor",
-		"enabled": true
-	}, {
-		"name": "PatchedItems",
-		"enabled": true
-	}]
+	"debug": false
 }

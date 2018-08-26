@@ -22,7 +22,14 @@ const handleRegister = (body, database, res) => {
 				return res.code(200).send(`Successfully registered with the username ${username}`)
 			})
 		})
-	}).catch(() => {
+	}).catch((err) => {
+		if (err.code === "ECONNREFUSED") {
+			console.log("Couldn't connect to MySQL, possibly because of incorrect configuration or it isn't running")
+			process.exit(1)
+		} else {
+			console.log(err)
+		}
+
 		return res.code(200).send("That username already exists!")
 	})
 }

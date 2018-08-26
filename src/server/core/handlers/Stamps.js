@@ -35,10 +35,8 @@ class Stamps {
 			if (!exists) return
 
 			let pinStr = ""
-
-			const items = require("../../crumbs/items")
-			const pins = require("../../crumbs/pins")
-
+			const items = penguin.server.item_crumbs
+			const pins = penguin.server.pin_crumbs
 			const playerObj = penguin.server.getPenguinById(penguinID)
 
 			if (playerObj) {
@@ -88,9 +86,7 @@ class Stamps {
 			if (!exists) return
 
 			let awardStr = ""
-
-			const awards = require("../../crumbs/awards")
-
+			const awards = penguin.server.award_crumbs
 			const playerObj = penguin.server.getPenguinById(penguinID)
 
 			if (playerObj) {
@@ -156,7 +152,6 @@ class Stamps {
 		})
 
 		penguin.updateColumn("cover", cover)
-
 		penguin.sendXt("ssbcd", -1)
 	}
 

@@ -25,15 +25,39 @@ class Server {
 		this.penguins = []
 
 		if (this.type !== "login") {
+			this.furniture_crumbs = require("./crumbs/furniture")
+			this.igloo_crumbs = require("./crumbs/igloos")
+			this.floor_crumbs = require("./crumbs/floors")
+			this.stamp_crumbs = require("./crumbs/stamps")
+			this.pin_crumbs = require("./crumbs/pins")
+			this.award_crumbs = require("./crumbs/awards")
+			this.decodeItemCrumbs().then((item_crumbs) => {
+				this.item_crumbs = item_crumbs
+				Logger.info("Successfully decoded item crumbs!")
+			})
+
 			this.roomManager = new(require("./core/managers/roomManager"))()
 			this.gameManager = new(require("./core/managers/gameManager"))(this)
-			this.pluginLoader = new(require("./core/managers/pluginLoader"))
 		}
 
 		this.startServer()
 
 		process.on("SIGINT", () => this.handleShutdown())
 		process.on("SIGTERM", () => this.handleShutdown())
+	}
+
+	decodeItemCrumbs() {
+		const msgpack = require("msgpuck")
+
+		const Decoder = new msgpack.Decoder()
+
+		return new Promise((resolve, reject) => {
+			require("fs").readFile(`${__dirname}/crumbs/items.bin`, (err, data) => {
+				if (err) return reject(err)
+
+				return resolve(Decoder.decode(data))
+			})
+		})
 	}
 
 	startServer() {
@@ -194,14 +218,6 @@ class Server {
 			}
 		}
 		return false
-	}
-
-	getPlugin(plugin) {
-		return this.pluginLoader.getPlugin(plugin)
-	}
-
-	isPluginEnabled(plugin) {
-		return this.getPlugin(plugin) !== undefined
 	}
 }
 

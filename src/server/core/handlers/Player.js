@@ -133,27 +133,11 @@ class Player {
 	static handleSendMessage(data, penguin) {
 		let message = String(data[5])
 
-		if (message.length <= 0 || message.length > 48 && parseInt(data[4]) !== 0 && !penguin.moderator) return penguin.sendError(5, true)
+		if (message.length <= 0 || message.length > 48 && !penguin.moderator) return penguin.sendError(5, true)
 		if (penguin.muted) return
+		if (penguin.moderator) return penguin.room.sendXt("mm", -1, message, penguin.id)
 
-		let commandsEnabled = penguin.server.isPluginEnabled("Commands")
-		let censorEnabled = penguin.server.isPluginEnabled("Censor")
-
-		if (commandsEnabled && message.charAt(0) === "/") {
-			const command = message.substr(1)
-
-			message = message.split(" ")
-			message.shift()
-
-			const argument = message
-
-			return penguin.server.getPlugin("Commands").handleCommand(command, argument, penguin)
-		} else {
-			if (censorEnabled) {
-				if (penguin.moderator) return penguin.room.sendXt("mm", -1, penguin.server.getPlugin("Censor").censorCheck(message), penguin.id)
-				return penguin.room.sendXt("sm", -1, penguin.id, penguin.server.getPlugin("Censor").censorCheck(message))
-			}
-		}
+		penguin.room.sendXt("sm", -1, penguin.id, message)
 	}
 
 	static handleMineCoins(data, penguin) {

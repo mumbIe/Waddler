@@ -43,10 +43,6 @@ class Navigation {
 			if (penguin.server.roomManager.checkRoomFull(room)) return penguin.sendError(210)
 
 			roomObj.addPenguin(penguin, [x, y])
-
-			if (penguin.server.isPluginEnabled("Bot")) {
-				penguin.sendXt("ap", -1, penguin.server.getPlugin("Bot").generateBotString())
-			}
 		} else {
 			penguin.sendError(210)
 		}

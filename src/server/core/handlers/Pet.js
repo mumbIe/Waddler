@@ -372,12 +372,6 @@ class Pet {
 
 			puffleName = String(puffleName).replace(/\W/g, "")
 
-			if (penguin.server.isPluginEnabled("Censor")) {
-				if (penguin.server.getPlugin("Censor").containsSwear(puffleName)) {
-					return penguin.sendError(441)
-				}
-			}
-
 			penguin.knex("puffles").insert({
 				ID: penguin.id,
 				puffleName: puffleName,
