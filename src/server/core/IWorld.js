@@ -269,52 +269,52 @@ const xtHandlers = {
 			throttle: true
 		},
 		"p#pr": {
-			func: "handlePuffleRest",
+			func: "handlePuffleActions",
 			file: Pet,
 			throttle: false
 		},
 		"p#pp": {
-			func: "handlePufflePlay",
+			func: "handlePuffleActions",
 			file: Pet,
 			throttle: false
 		},
 		"p#pt": {
-			func: "handlePuffleTreat",
+			func: "handlePuffleActions",
 			file: Pet,
 			throttle: false
 		},
 		"p#pf": {
-			func: "handlePuffleFeed",
+			func: "handlePuffleActions",
 			file: Pet,
 			throttle: false
 		},
 		"p#pb": {
-			func: "handlePuffleBath",
+			func: "handlePuffleActions",
 			file: Pet,
 			throttle: false
 		},
 		"p#ir": {
-			func: "handlePuffleInteractionRest",
+			func: "handlePuffleInteractions",
 			file: Pet,
 			throttle: false
 		},
 		"p#ip": {
-			func: "handlePuffleInteractionPlay",
+			func: "handlePuffleInteractions",
 			file: Pet,
 			throttle: false
 		},
 		"p#if": {
-			func: "handlePuffleInteractionFeed",
+			func: "handlePuffleInteractions",
 			file: Pet,
 			throttle: false
 		},
 		"p#pir": {
-			func: "handlePuffleInitInteractionRest",
+			func: "handlePuffleInitInteractions",
 			file: Pet,
 			throttle: false
 		},
 		"p#pip": {
-			func: "handlePuffleInitInteractionPlay",
+			func: "handlePuffleInitInteractions",
 			file: Pet,
 			throttle: false
 		},

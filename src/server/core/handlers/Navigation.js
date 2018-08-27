@@ -44,7 +44,7 @@ class Navigation {
 
 			roomObj.addPenguin(penguin, [x, y])
 		} else {
-			penguin.sendError(210)
+			penguin.sendError(213)
 		}
 	}
 
@@ -67,7 +67,7 @@ class Navigation {
 		if (roomObj) {
 			roomObj.addPenguin(penguin, [x, y])
 		} else {
-			penguin.sendError(210)
+			penguin.sendError(213)
 		}
 	}
 

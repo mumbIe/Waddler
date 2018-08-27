@@ -23,6 +23,7 @@ class DataHandler {
 				if (this.failedLogins[penguin.ipAddr].length > 7) return penguin.sendError(150, true)
 
 				const hash = GameDataEncryptor.hashPassword(GameDataEncryptor.decryptZaseth(password, penguin.randomKey))
+
 				if (result.password === hash && this.failedLogins[penguin.ipAddr].length < 7) {
 					delete this.failedLogins[penguin.ipAddr]
 

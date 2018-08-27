@@ -24,7 +24,7 @@ class Server {
 
 		this.penguins = []
 
-		if (this.type !== "login") {
+		if (this.type === "game") {
 			this.furniture_crumbs = require("./crumbs/furniture")
 			this.igloo_crumbs = require("./crumbs/igloos")
 			this.floor_crumbs = require("./crumbs/floors")
@@ -88,7 +88,7 @@ class Server {
 			})
 
 			socket.on("close", () => {
-				Logger.info("A client has been disconnected")
+				Logger.info("A client has disconnected")
 				penguin.disconnect()
 			})
 

@@ -62,7 +62,7 @@ class Multiplayer {
 		}
 
 		if (penguin.room.id === 802) {
-			penguin.sendXt("gz", -1, "0%0%0%0%")
+			return penguin.sendXt("gz", -1, "0%0%0%0%")
 		}
 
 		const method = gameHandlers[type][handler]
