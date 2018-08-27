@@ -1,6 +1,9 @@
-# Waddler
-
-A rich-featured open source Club Penguin emulator, written in Node.js.
+<h1 align="center">Waddler</h1>
+<p align="center"><b>A rich-featured open source Club Penguin emulator, written in Node.js.</b></p>
+<p align="center"><img src="https://media.discordapp.net/attachments/476117597729849344/482611191945101322/qAlmu3N.png?width=1077&height=676"></p>
+<p align="center"><img src="https://media.discordapp.net/attachments/476117597729849344/482611218478268467/HakxdPR.png?width=1083&height=676"></p>
+<p align="center"><img src="https://media.discordapp.net/attachments/476117597729849344/482611240380792843/PSOWHBx.png?width=1078&height=677"></p> 
+<p align="center"><img src="https://i.imgur.com/QLnFGkG.png"></p> 
 
 # Features
 
