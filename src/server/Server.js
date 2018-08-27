@@ -24,7 +24,7 @@ class Server {
 
 		this.penguins = []
 
-		if (this.type === "game") {
+		if (this.type !== "login") {
 			this.furniture_crumbs = require("./crumbs/furniture")
 			this.igloo_crumbs = require("./crumbs/igloos")
 			this.floor_crumbs = require("./crumbs/floors")
