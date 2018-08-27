@@ -41,10 +41,14 @@ class Multiplayer {
 	static handleGameOver(data, penguin) {
 		const score = parseInt(data[4])
 
-		if (isNaN(score) || isNaN(penguin.gameRoomId)) return penguin.disconnect()
+		if (isNaN(score)) return penguin.disconnect()
 		if (penguin.gameRoomId > 1000) return
 
-		sp.isNonDividableGame(penguin.gameRoomId) ? penguin.addCoins(score) : score < 99999 ? penguin.addCoins(Math.floor(score / 10)) : penguin.disconnect()
+		if (sp.isNonDividableGame(penguin.gameRoomId) || penguin.waddleRoom !== null) {
+			penguin.addCoins(score)
+		} else if (score < 99999) {
+			penguin.addCoins(Math.floor(score / 10))
+		}
 
 		penguin.sendXt("zo", -1, penguin.coins, 0, 0, 0, 0)
 	}
@@ -63,6 +67,18 @@ class Multiplayer {
 
 		if (penguin.room.id === 802) {
 			return penguin.sendXt("gz", -1, "0%0%0%0%")
+		}
+
+		if (penguin.waddleRoom !== null) {
+			let waddlePlayers = ""
+
+			for (const i in penguin.room.penguins) {
+				const player = penguin.room.penguins[i]
+
+				waddlePlayers += `${player.username}|${player.color}|${player.hand}|${player.username}%`
+			}
+
+			return penguin.sendXt("uz", -1, waddlePlayers.length, waddlePlayers.slice(0, -1))
 		}
 
 		const method = gameHandlers[type][handler]

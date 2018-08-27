@@ -15,6 +15,7 @@ const Stamps = require("./handlers/Stamps")
 const Mail = require("./handlers/Mail")
 
 const Multiplayer = require("./handlers/Multiplayer")
+const Waddle = require("./handlers/Waddle")
 
 const xtHandlers = {
 	"s": {
@@ -457,6 +458,11 @@ const xtHandlers = {
 			func: "handleMultiplayerData",
 			file: Multiplayer,
 			throttle: false
+		},
+		"w#jx": {
+			func: "handleJoinWaddle",
+			file: Waddle,
+			throttle: false
 		}
 	},
 	"z": {
@@ -484,6 +490,21 @@ const xtHandlers = {
 			func: "handleMultiplayerData",
 			file: Multiplayer,
 			throttle: true
+		},
+		"gw": {
+			func: "handleGetWaddlesPopulationById",
+			file: Waddle,
+			throttle: false
+		},
+		"jw": {
+			func: "handleSendJoinWaddleById",
+			file: Waddle,
+			throttle: false
+		},
+		"lw": {
+			func: "handleLeaveWaddle",
+			file: Waddle,
+			throttle: false
 		}
 	}
 }

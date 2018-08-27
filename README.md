@@ -11,7 +11,7 @@ A rich-featured open source Club Penguin emulator, written in Node.js.
 * Uses the latest crumbs
 * Everything that is logged is stored in separate text files in a nice format
 * Advanced multiplayer handler that allows you to add multiple minigames
-* Supports 3 minigames: Find Four, Mancala and Treasurehunt
+* Supports 4 minigames: `Sled-race, Find-Four, Mancala and Treasure hunt`
 * Supports functions like: Igloos, Puffles, Postcards and more
 * Throttling system
 

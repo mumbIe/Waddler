@@ -1,6 +1,6 @@
 {
 	"name": "waddler",
-	"version": "1.5.3",
+	"version": "1.5.4",
 	"description": "A rich-featured open source Club Penguin emulator, written in Node.js.",
 	"keywords": [
 		"club",
@@ -14,7 +14,7 @@
 		"mysql2": "^1.6.1",
 		"keccak": "^1.4.0",
 		"chalk": "^2.4.1",
-		"mspguck": "^0.5.3"
+		"mspguck": "^0.5.4"
 	},
 	"author": "Zaseth",
 	"license": "MIT"

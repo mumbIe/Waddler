@@ -23,6 +23,8 @@ class Room {
 
 		if (this.id > 1000) penguin.sendXt("jp", -1, this.id)
 
+		if (this.id === 999) penguin.sendXt("jx", -1, this.id)
+
 		if (this.penguins.length > 0) {
 			penguin.sendXt("jr", -1, this.id, this.buildRoomString())
 		} else {

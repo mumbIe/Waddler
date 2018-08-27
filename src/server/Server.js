@@ -81,8 +81,6 @@ class Server {
 
 				if (!["<", "%"].includes(data.charAt(0))) return penguin.disconnect()
 
-				Logger.incoming(data)
-
 				if (data.charAt(0) === "%") return this.dataHandler.handleGame(data, penguin)
 				if (data.charAt(0) === "<") return this.dataHandler.handleXML(data, penguin)
 			})

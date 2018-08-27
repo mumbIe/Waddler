@@ -75,6 +75,8 @@ class DataHandler {
 
 		if (!xt_method) return Logger.unknown(packet)
 
+		Logger.incoming(packet)
+
 		const xt_attributes = {
 			func: xt_method["func"],
 			file: xt_method["file"],
@@ -112,6 +114,8 @@ class DataHandler {
 	}
 
 	handleXML(data, penguin) {
+		Logger.incoming(data)
+
 		if (data === "<policy-file-request/>") {
 			return penguin.sendRaw(`<cross-domain-policy><allow-access-from domain="*" to-ports="*"/></cross-domain-policy>`)
 		} else {
